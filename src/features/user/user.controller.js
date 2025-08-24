@@ -4,9 +4,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import ApplicationError from "../../../utils/ApplicationError.js";
 
-import dotenv from "dotenv";
-dotenv.config(); // must be first before other imports
-
 const jwtSecret = process.env.JWT_SECRET;
 
 export default class UserController {
