@@ -3,10 +3,15 @@ import UserModel from "./user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import ApplicationError from "../../../utils/ApplicationError.js";
-
 const jwtSecret = process.env.JWT_SECRET;
 
+import UserRepository from "./user.respository.js";
+
 export default class UserController {
+  constructor(){
+    this.userRepository = new UserRepository();
+  };
+
   async SignUp(req, res, next) {
     try {
       const { name, email, password } = req.body;
@@ -16,24 +21,28 @@ export default class UserController {
         return res.status(400).json({ message: "All fields are required" });
       }
 
-      // checking if the user is already exit
-      const existingUser = await UserModel.findByEmail(email);
-      if (existingUser)
+      const existingUser  = await this.userRepository.findByEmail(email);
+
+      if (existingUser ) {
         throw new ApplicationError("User already exists with this email", 409);
+      }
 
       const hashedPassword = await bcrypt.hash(password, 12);
-      const user = await UserModel.signUp(name, email, hashedPassword);
 
+      const user = new UserModel(name, email, hashedPassword);
+
+      const result = await this.userRepository.signUp(user);
+      
       // Optional: Auto-login after signup
       const token = jwt.sign(
-        { userID: user.id, email: user.email },
+        { userID: result._id, email: result.email},
         jwtSecret,
         { expiresIn: "1h" }
       );
 
       return res.status(201).json({
         message: "User created successfully",
-        user: { id: user.id, name: user.name, email: user.email },
+        user: { id: result._id, name: result.name, email: result.email },
         token,
         expiresIn: "1h",
       });
@@ -52,8 +61,9 @@ export default class UserController {
           .status(400)
           .json({ message: "Email and password are required" });
       }
+      
+      const user =  await this.userRepository.findByEmail(email);
 
-      const user = await UserModel.findByEmail(email);
       if (!user) {
       // Don’t reveal whether email exists
       return res.status(401).json({ message: "Invalid credentials" });
@@ -64,7 +74,7 @@ export default class UserController {
       };
 
       const token = jwt.sign(
-        { userID: user.id, email: user.email },
+        { userID: user._id, email: user.email },
         jwtSecret,
         { expiresIn: "1h" }
       );

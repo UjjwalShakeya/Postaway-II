@@ -1,5 +1,3 @@
-// importing required modules
-import ApplicationError from "../../../utils/ApplicationError.js";
 
 let Users = [
   {
@@ -11,21 +9,10 @@ let Users = [
 ];
 
 export default class UserModel {
-  constructor(id, name, email, password) {
-    this.id = id;
+  constructor(name, email, password) {
     this.name = name;
     this.email = email;
     this.password = password;
-  }
-
-  static async signUp(name, email, password) {
-    const newUser = new UserModel(Users.length + 1, name, email, password);
-    Users.push(newUser);
-    return newUser;
-  }
-
-  static async findByEmail(email) {
-    return Users.find((u) => u.email === email);
   }
   
   static async updatePassword(email, newPassword) {

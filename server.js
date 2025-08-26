@@ -17,7 +17,7 @@ import errorHandler from "./src/middlewares/errorHandler.middleware.js";
 
 
 // importing mongodb 
-import connectToMongoDB from "./src/config/mongodb.js";
+import {connectToMongoDB} from "./src/config/mongodb.js";
 
 // creating an instance of express
 const app = express();
@@ -31,7 +31,7 @@ app.use(loggerMiddleware);
 app.use(errorLoggerMiddleware);
 
 // User Router On Default 
-app.use("/api/users", userRouter);
+app.use("/api/user", userRouter);
 
 // post Router On post 
 app.use("/api/posts", PostRouter);
