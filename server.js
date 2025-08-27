@@ -31,7 +31,7 @@ app.use(loggerMiddleware);
 app.use(errorLoggerMiddleware);
 
 // User Router On Default 
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 
 // post Router On post 
 app.use("/api/posts", PostRouter);

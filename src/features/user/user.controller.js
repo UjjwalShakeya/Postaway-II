@@ -4,13 +4,15 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import ApplicationError from "../../../utils/ApplicationError.js";
 const jwtSecret = process.env.JWT_SECRET;
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 import UserRepository from "./user.respository.js";
 
 export default class UserController {
-  constructor(){
+  constructor() {
     this.userRepository = new UserRepository();
-  };
+  }
 
   async SignUp(req, res, next) {
     try {
@@ -18,12 +20,12 @@ export default class UserController {
 
       // Double-check input
       if (!name || !email || !password) {
-        return res.status(400).json({ message: "All fields are required" });
+        throw new ApplicationError("All fields are required", 400);
       }
 
-      const existingUser  = await this.userRepository.findByEmail(email);
+      const existingUser = await this.userRepository.findByEmail(email);
 
-      if (existingUser ) {
+      if (existingUser) {
         throw new ApplicationError("User already exists with this email", 409);
       }
 
@@ -32,10 +34,10 @@ export default class UserController {
       const user = new UserModel(name, email, hashedPassword);
 
       const result = await this.userRepository.signUp(user);
-      
+
       // Optional: Auto-login after signup
       const token = jwt.sign(
-        { userID: result._id, email: result.email},
+        { userID: result._id, email: result.email },
         jwtSecret,
         { expiresIn: "1h" }
       );
@@ -57,21 +59,19 @@ export default class UserController {
 
       // checking email and password if any of them is missing then throw error
       if (!email || !password) {
-        return res
-          .status(400)
-          .json({ message: "Email and password are required" });
+        throw new ApplicationError("Email and password are required", 400);
       }
-      
-      const user =  await this.userRepository.findByEmail(email);
+
+      const user = await this.userRepository.findByEmail(email);
 
       if (!user) {
-      // Don’t reveal whether email exists
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+        // Don’t reveal whether email exists
+        throw new ApplicationError("user not found", 404);
+      }
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(401).json({ message: "Invalid Credentials" });
-      };
+        throw new ApplicationError("Invalid Credentials", 401);
+      }
 
       const token = jwt.sign(
         { userID: user._id, email: user.email },
@@ -84,45 +84,82 @@ export default class UserController {
         token,
         expiresIn: "1h",
       });
-
-    } catch (err) {
-      next(err);
-    }
-  } 
-
-    // Simple Reset (with old password verification) later when using email services and th db we can easily reset password without needing the old one 
-    async ResetPassword(req, res, next) {
-    try {
-      const { email, oldPassword, newPassword } = req.body;
-
-      // validate inputs
-      if (!email || !oldPassword || !newPassword) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-
-      // find user
-      const user = await UserModel.findByEmail(email);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // check old password
-      const isMatch = await bcrypt.compare(oldPassword, user.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: "Old password is incorrect" });
-      }
-
-      // hash new password
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-      // update in model
-      await UserModel.updatePassword(email, hashedPassword);
-
-      return res.status(200).json({ message: "Password updated successfully" });
-
     } catch (err) {
       next(err);
     }
   }
 
+  async ForgetPassword(req, res, next) {
+    try {
+      const { email } = req.body;
+
+      // checking first whether user is exist in the db or not
+      const user = await this.userRepository.findByEmail(email);
+
+      if (!user) {
+        throw new ApplicationError("user not found", 400);
+      }
+
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // expires in 15 min
+
+      await this.userRepository.setResetToken(
+        user.email,
+        resetToken,
+        resetTokenExpiry
+      );
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      const resetLink = `http://localhost:3000/api/users/reset-password/${resetToken}`;
+
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Password Reset Request",
+        html: `<p>You requested a password reset</p>
+               <p>Click here to reset: <a href="${resetLink}">${resetLink}</a></p>`,
+      });
+      return res
+        .status(200)
+        .json({ message: "Password reset link sent to email" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // Reset with token
+  async ResetPasswordWithToken(req, res, next) {
+    try {
+      const {token} = req.params;
+      const { newPassword } = req.body;
+
+      // validate inputs
+      if (!newPassword) {
+        throw new ApplicationError("New password is required", 400);
+      }
+
+      // find user by token
+      const user = await this.userRepository.findByResetToken(token);
+      console.log(user)
+      if (!user) {
+        throw new ApplicationError("Token is invalid or expired", 400);
+      }
+
+      // hash password
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+      await this.userRepository.updatePasswordWithToken(token, hashedPassword);
+
+      return res.status(200).json({ message: "Password reset successful" });
+    } catch (err) {
+      next(err);
+    }
+  }
 }

@@ -22,4 +22,4 @@ export default class UserModel {
     }
     return user;
   }
-}
+};

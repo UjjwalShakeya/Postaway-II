@@ -35,9 +35,53 @@ export default class UserRepository {
 
       const isUserFound = await collection.findOne({ email });
 
-      console.log(isUserFound);
-      
       return isUserFound;
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async setResetToken(email, token, expiry) {
+    try {
+      const db = getDB();
+
+      const collection = db.collection(this.collection);
+
+      await collection.updateOne(
+        { email },
+        { $set: { resetToken: token, resetTokenExpiry: expiry } }
+      );
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async findByResetToken(token) {
+    try {
+      const db = getDB();
+
+      const collection = db.collection(this.collection);
+
+      return await collection.findOne({ resetToken: token });
+      
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async updatePasswordWithToken(token, newPassword) {
+    try {
+      const db = getDB();
+
+      const collection = db.collection(this.collection);
+
+      return await collection.updateOne(
+        { resetToken: token },
+        {
+          $set: { password: newPassword },
+          $unset: { resetToken: "", resetTokenExpiry: "" },
+        }
+      );
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
