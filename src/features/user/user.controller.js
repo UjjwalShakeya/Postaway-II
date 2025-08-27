@@ -42,10 +42,24 @@ export default class UserController {
         { expiresIn: "1h" }
       );
 
+      const refreshToken = jwt.sign(
+        {
+          userID: result._id,
+          email: result.email,
+        },
+        jwtSecret,
+        {
+          expiresIn: "7d",
+        }
+      );
+
+      await this.userRepository.addRefreshToken(result._id, refreshToken);
+
       return res.status(201).json({
         message: "User created successfully",
         user: { id: result._id, name: result.name, email: result.email },
         token,
+        refreshToken,
         expiresIn: "1h",
       });
     } catch (err) {
@@ -79,9 +93,23 @@ export default class UserController {
         { expiresIn: "1h" }
       );
 
+      const refreshToken = jwt.sign(
+        {
+          userID: user._id,
+          email: user.email,
+        },
+        jwtSecret,
+        {
+          expiresIn: "7d",
+        }
+      );
+
+      await this.userRepository.addRefreshToken(user._id, refreshToken);
+
       return res.status(200).json({
         message: "Login successful",
         token,
+        refreshToken,
         expiresIn: "1h",
       });
     } catch (err) {
@@ -137,7 +165,7 @@ export default class UserController {
   // Reset with token
   async ResetPasswordWithToken(req, res, next) {
     try {
-      const {token} = req.params;
+      const { token } = req.params;
       const { newPassword } = req.body;
 
       // validate inputs
@@ -147,7 +175,7 @@ export default class UserController {
 
       // find user by token
       const user = await this.userRepository.findByResetToken(token);
-      console.log(user)
+      console.log(user);
       if (!user) {
         throw new ApplicationError("Token is invalid or expired", 400);
       }
@@ -158,6 +186,43 @@ export default class UserController {
       await this.userRepository.updatePasswordWithToken(token, hashedPassword);
 
       return res.status(200).json({ message: "Password reset successful" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // logout
+  async Logout(req, res, next) {
+    try {
+      const { refreshToken } = req.body;
+      
+      const user = await this.userRepository.findByRefreshToken(refreshToken);
+
+      // user not found
+      if (!user) {
+        throw new ApplicationError("Invalid refresh token", 400);
+      }
+
+      await this.userRepository.removeRefreshToken(user._id, refreshToken);
+
+      return res.status(200).json({ message: "Logged out successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // logout all
+  async LogoutAll(req, res, next) {
+    try {
+      const { userId } = req.body;
+
+      // user not found
+      if (!userId) {
+        throw new ApplicationError("User ID required", 400);
+      }
+      await this.userRepository.removeAllRefreshToken(userId);
+
+      return res.status(200).json({ message: "Logged out from all devices" });
     } catch (err) {
       next(err);
     }

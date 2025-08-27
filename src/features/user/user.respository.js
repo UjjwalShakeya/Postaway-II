@@ -63,7 +63,6 @@ export default class UserRepository {
       const collection = db.collection(this.collection);
 
       return await collection.findOne({ resetToken: token });
-      
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
@@ -82,6 +81,68 @@ export default class UserRepository {
           $unset: { resetToken: "", resetTokenExpiry: "" },
         }
       );
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async addRefreshToken(userId, refreshToken) {
+    try {
+      // getting the access of the db
+      const db = getDB();
+
+      const collection = db.collection(this.collection);
+      await collection.updateOne(
+        { _id: userId },
+        { $push: { refreshTokens: refreshToken } }
+      );
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async removeRefreshToken(userId, refreshToken) {
+    try {
+      // getting the access of the db
+      const db = getDB();
+
+      // getting the access of the collection
+      const collection = db.collection(this.collection);
+      await collection.updateOne(
+        { _id: userId },
+        { $pull: { refreshTokens: refreshToken } }
+      );
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async removeAllRefreshToken(userId) {
+    try {
+      // getting the access of the db
+      const db = getDB();
+
+      // getting the access of the collection
+      const collection = db.collection(this.collection);
+      await collection.updateOne(
+        { _id: userId },
+        { $set: { refreshTokens: [] } }
+      );
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async findByRefreshToken(refreshToken) {
+    try {
+
+      // getting the access of the db
+      const db = getDB();
+
+      // getting the access of the collection
+      const collection = db.collection(this.collection);
+
+      return await collection.findOne({ refreshTokens: refreshToken });
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }

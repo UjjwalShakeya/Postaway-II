@@ -297,3 +297,10 @@
 [2025-08-27T21:10:18.634Z] info: POST /api/users/forget-password {"email":"ujjwalshakeya1@gmail.com"}
 [2025-08-27T21:10:54.066Z] info: POST /api/users/reset-password/083220a3b5e1f8879fa8c3415fea47e510d33a19571642810889e3b4ef0d42fb {"newPassword":"Ae%_yK2+(U{/8?_"}
 [2025-08-27T21:14:48.648Z] info: POST /api/users/forget-password {"email":"ujjwalshakeya1@gmail.com"}
+[2025-08-27T22:45:20.848Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGFmODliMTIxY2QzMTU5M2ZiYTk3OTQiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjMzNDU2MCwiZXhwIjoxNzU2OTM5MzYwfQ.duen9XzeRBTsMTniSso3cTVNEFQZ2kUH9y_V0CTKuFA"}
+[2025-08-27T22:45:55.403Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGFmODliMTIxY2QzMTU5M2ZiYTk3OTQiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjMzNDU2MCwiZXhwIjoxNzU2OTM5MzYwfQ.duen9XzeRBTsMTniSso3cTVNEFQZ2kUH9y_V0CTKuFA"}
+[2025-08-27T22:46:14.698Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGFmODliMTIxY2QzMTU5M2ZiYTk3OTQiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjMzNDU2MCwiZXhwIjoxNzU2OTM5MzYwfQ.duen9XzeRBTsMTniSso3cTVNEFQZ2kUH9y_V0CTKuFA"}
+[2025-08-27T22:48:16.763Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGFmODliMTIxY2QzMTU5M2ZiYTk3OTQiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjMzNDU2MCwiZXhwIjoxNzU2OTM5MzYwfQ.duen9XzeRBTsMTniSso3cTVNEFQZ2kUH9y_V0CTKuFA"}
+[2025-08-27T22:51:25.223Z] info: POST /api/users/logout-all {"userId":"68af89b121cd31593fba9794"}
+[2025-08-27T22:51:51.207Z] info: POST /api/users/logout-all {"userId":"68af89b121cd31593fba9794"}
+[2025-08-27T22:52:47.548Z] info: POST /api/users/logout-all {"userId":"68af89b121cd31593fba9794"}

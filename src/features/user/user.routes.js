@@ -2,6 +2,7 @@
 import express from "express";
 import validateUser from "../../middlewares/validator.middleware.js";
 import UserController from "./user.controller.js";
+import jwtAuth from "../../middlewares/jwt.middleware.js";
 
 // making instance of userController
 const userControllerInc = new UserController();
@@ -27,6 +28,16 @@ userRouter.post('/forget-password',(req, res, next)=>{
 // user router for reset password 
 userRouter.post("/reset-password/:token", (req, res, next) =>{
   userControllerInc.ResetPasswordWithToken(req, res, next);
+});
+
+// user router for logout 
+userRouter.post("/logout",jwtAuth, (req, res, next) =>{
+  userControllerInc.Logout(req, res, next);
+});
+
+// user router for logout 
+userRouter.post("/logout-all",jwtAuth, (req, res, next) =>{
+  userControllerInc.LogoutAll(req, res, next);
 });
 
 export default userRouter;
