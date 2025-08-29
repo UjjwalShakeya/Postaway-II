@@ -190,7 +190,7 @@ export default class UserController {
       next(err);
     }
   }
-  
+
   // logout
   async Logout(req, res, next) {
     try {
@@ -214,7 +214,7 @@ export default class UserController {
   // logout all
   async LogoutAll(req, res, next) {
     try {
-      const { userId } = req.body;
+      const userId = req.userID;
 
       // user not found
       if (!userId) {
