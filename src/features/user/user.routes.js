@@ -29,14 +29,14 @@ userRouter.post('/forget-password',(req, res, next)=>{
 userRouter.post("/reset-password/:token", (req, res, next) =>{
   userControllerInc.ResetPasswordWithToken(req, res, next);
 });
-
+  
 // user router for logout 
 userRouter.post("/logout",jwtAuth, (req, res, next) =>{
   userControllerInc.Logout(req, res, next);
 });
 
 // user router for logout 
-userRouter.post("/logout-all",jwtAuth, (req, res, next) =>{
+userRouter.post("/logout-all-devices",jwtAuth, (req, res, next) =>{
   userControllerInc.LogoutAll(req, res, next);
 });
 

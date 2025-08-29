@@ -1,6 +1,7 @@
 // importing important modules
 import ApplicationError from "../../../utils/ApplicationError.js";
 import { getDB } from "../../config/mongodb.js";
+import { ObjectId } from "mongodb";
 
 export default class UserRepository {
   constructor() {
@@ -109,7 +110,7 @@ export default class UserRepository {
       // getting the access of the collection
       const collection = db.collection(this.collection);
       await collection.updateOne(
-        { _id: userId },
+        { _id: new ObjectId(userId) },
         { $pull: { refreshTokens: refreshToken } }
       );
     } catch (err) {
@@ -124,8 +125,9 @@ export default class UserRepository {
 
       // getting the access of the collection
       const collection = db.collection(this.collection);
+
       await collection.updateOne(
-        { _id: userId },
+        { _id: new ObjectId(userId) },
         { $set: { refreshTokens: [] } }
       );
     } catch (err) {
@@ -135,7 +137,6 @@ export default class UserRepository {
 
   async findByRefreshToken(refreshToken) {
     try {
-
       // getting the access of the db
       const db = getDB();
 

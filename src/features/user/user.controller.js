@@ -190,7 +190,7 @@ export default class UserController {
       next(err);
     }
   }
-
+  
   // logout
   async Logout(req, res, next) {
     try {
