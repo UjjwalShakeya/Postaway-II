@@ -8,7 +8,7 @@ let Users = [
   },
 ];
 
-export default class UserModel {
+export default class AuthModel {
   constructor(name, email, password) {
     this.name = name;
     this.email = email;

@@ -3,7 +3,7 @@ import ApplicationError from "../../../utils/ApplicationError.js";
 import { getDB } from "../../config/mongodb.js";
 import { ObjectId } from "mongodb";
 
-export default class UserRepository {
+export default class AuthRepository {
   constructor() {
     this.collection = "users";
   }

@@ -1,5 +1,5 @@
 // importing important modules
-import UserModel from "./user.model.js";
+import AuthModel from "./auth.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import ApplicationError from "../../../utils/ApplicationError.js";
@@ -7,11 +7,11 @@ const jwtSecret = process.env.JWT_SECRET;
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
-import UserRepository from "./user.respository.js";
+import AuthRepository from "./auth.respository.js";
 
-export default class UserController {
+export default class AuthController {
   constructor() {
-    this.userRepository = new UserRepository();
+    this.authRepository = new AuthRepository();
   }
 
   async SignUp(req, res, next) {
@@ -23,7 +23,7 @@ export default class UserController {
         throw new ApplicationError("All fields are required", 400);
       }
 
-      const existingUser = await this.userRepository.findByEmail(email);
+      const existingUser = await this.authRepository.findByEmail(email);
 
       if (existingUser) {
         throw new ApplicationError("User already exists with this email", 409);
@@ -31,9 +31,9 @@ export default class UserController {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new UserModel(name, email, hashedPassword);
+      const user = new AuthModel(name, email, hashedPassword);
 
-      const result = await this.userRepository.signUp(user);
+      const result = await this.authRepository.signUp(user);
 
       // Optional: Auto-login after signup
       const token = jwt.sign(
@@ -53,7 +53,7 @@ export default class UserController {
         }
       );
 
-      await this.userRepository.addRefreshToken(result._id, refreshToken);
+      await this.authRepository.addRefreshToken(result._id, refreshToken);
 
       return res.status(201).json({
         message: "User created successfully",
@@ -76,7 +76,7 @@ export default class UserController {
         throw new ApplicationError("Email and password are required", 400);
       }
 
-      const user = await this.userRepository.findByEmail(email);
+      const user = await this.authRepository.findByEmail(email);
 
       if (!user) {
         // Don’t reveal whether email exists
@@ -104,7 +104,7 @@ export default class UserController {
         }
       );
 
-      await this.userRepository.addRefreshToken(user._id, refreshToken);
+      await this.authRepository.addRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({
         message: "Login successful",
@@ -122,7 +122,7 @@ export default class UserController {
       const { email } = req.body;
 
       // checking first whether user is exist in the db or not
-      const user = await this.userRepository.findByEmail(email);
+      const user = await this.authRepository.findByEmail(email);
 
       if (!user) {
         throw new ApplicationError("user not found", 400);
@@ -131,7 +131,7 @@ export default class UserController {
       const resetToken = crypto.randomBytes(32).toString("hex");
       const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // expires in 15 min
 
-      await this.userRepository.setResetToken(
+      await this.authRepository.setResetToken(
         user.email,
         resetToken,
         resetTokenExpiry
@@ -174,7 +174,7 @@ export default class UserController {
       }
 
       // find user by token
-      const user = await this.userRepository.findByResetToken(token);
+      const user = await this.authRepository.findByResetToken(token);
       console.log(user);
       if (!user) {
         throw new ApplicationError("Token is invalid or expired", 400);
@@ -183,7 +183,7 @@ export default class UserController {
       // hash password
       const hashedPassword = await bcrypt.hash(newPassword, 12);
 
-      await this.userRepository.updatePasswordWithToken(token, hashedPassword);
+      await this.authRepository.updatePasswordWithToken(token, hashedPassword);
 
       return res.status(200).json({ message: "Password reset successful" });
     } catch (err) {
@@ -196,14 +196,14 @@ export default class UserController {
     try {
       const { refreshToken } = req.body;
       
-      const user = await this.userRepository.findByRefreshToken(refreshToken);
+      const user = await this.authRepository.findByRefreshToken(refreshToken);
 
       // user not found
       if (!user) {
         throw new ApplicationError("Invalid refresh token", 400);
       }
 
-      await this.userRepository.removeRefreshToken(user._id, refreshToken);
+      await this.authRepository.removeRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
@@ -220,7 +220,7 @@ export default class UserController {
       if (!userId) {
         throw new ApplicationError("User ID required", 400);
       }
-      await this.userRepository.removeAllRefreshToken(userId);
+      await this.authRepository.removeAllRefreshToken(userId);
 
       return res.status(200).json({ message: "Logged out from all devices" });
     } catch (err) {

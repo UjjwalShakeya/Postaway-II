@@ -319,3 +319,8 @@
 [2025-08-29T18:22:53.850Z] info: POST /api/users/logout-all-devices Request Body Is Empty
 [2025-08-29T19:50:38.907Z] info: POST /api/users/logout-all-devices Request Body Is Empty
 [2025-08-29T19:51:48.364Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-08-30T16:46:33.460Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-08-30T17:23:54.197Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-08-30T17:24:32.808Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-08-30T17:25:33.130Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGIzMzM5NTkxZTc1ZDNhMzA2YmI2OWEiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjU3NDY4OCwiZXhwIjoxNzU3MTc5NDg4fQ.vKHMJVFCTmDxjRK5BiUGGIskKDxqinFyLH2jz0KIBIo"}
+[2025-08-30T17:25:52.948Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGIzMzM5NTkxZTc1ZDNhMzA2YmI2OWEiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjU3NDY4OCwiZXhwIjoxNzU3MTc5NDg4fQ.vKHMJVFCTmDxjRK5BiUGGIskKDxqinFyLH2jz0KIBIo"}
