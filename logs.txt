@@ -324,3 +324,5 @@
 [2025-08-30T17:24:32.808Z] info: POST /api/users/logout-all-devices Request Body Is Empty
 [2025-08-30T17:25:33.130Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGIzMzM5NTkxZTc1ZDNhMzA2YmI2OWEiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjU3NDY4OCwiZXhwIjoxNzU3MTc5NDg4fQ.vKHMJVFCTmDxjRK5BiUGGIskKDxqinFyLH2jz0KIBIo"}
 [2025-08-30T17:25:52.948Z] info: POST /api/users/logout {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2OGIzMzM5NTkxZTc1ZDNhMzA2YmI2OWEiLCJlbWFpbCI6InVqandhbHNoYWtleWExQGdtYWlsLmNvbSIsImlhdCI6MTc1NjU3NDY4OCwiZXhwIjoxNzU3MTc5NDg4fQ.vKHMJVFCTmDxjRK5BiUGGIskKDxqinFyLH2jz0KIBIo"}
+[2025-08-30T18:28:27.568Z] info: GET /api/users/get-details/68b3429d7b8c3e2c68146977 Request Body Is Empty
+[2025-08-30T18:30:36.580Z] info: GET /api/users/get-details/68b3429d7b8c3e2c68146977 Request Body Is Empty

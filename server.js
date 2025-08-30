@@ -6,6 +6,7 @@ import express from "express";
 
 // Imported route files
 import authRouter from "./src/features/auth/auth.routes.js";
+import userRouter from "./src/features/user/user.routes.js";
 import PostRouter from "./src/features/post/post.routes.js";
 import commentRouter from "./src/features/comment/comment.routes.js";
 import LikeRouter from "./src/features/like/like.routes.js";
@@ -35,7 +36,7 @@ app.use(errorLoggerMiddleware);
 // User Router On Default
 app.use("/api/users", authRouter);
 
-// app.use("/api/users", userRouter);
+app.use("/api/users", userRouter);
 
 // post Router On post
 app.use("/api/posts", PostRouter);
