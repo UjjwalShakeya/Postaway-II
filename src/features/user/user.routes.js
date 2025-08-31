@@ -11,5 +11,9 @@ userRouter.get("/get-details/:userId", jwtAuth, (req, res, next) => {
   userControllerInc.getUser(req, res, next);
 });
 
+userRouter.get("/get-all-details/", jwtAuth, (req, res, next) => {
+  userControllerInc.getAllUsers(req, res, next);
+});
+
 
 export default userRouter;

@@ -20,6 +20,19 @@ export default class UserController {
         message: "user details retrieved successfully",
         user,
       });
+      
+    } catch (err) {
+      next(err);
+    }
+  }
+  async getAllUsers(req, res, next) {
+    try {
+      const users = await this.userRepository.getAllUsers();
+
+      return res.status(200).json({
+        message: "all users details retrieved successfully",
+        users
+      });
     } catch (err) {
       next(err);
     }
