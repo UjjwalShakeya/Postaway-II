@@ -41,34 +41,51 @@ export default class UserController {
   async updateUserById(req, res, next) {
     try {
       const userId = req.params.userId;
-      const { name, gender } = req.body;
+      const name = req.body.name;
+      const gender = req.body.gender;
 
-      // Validate input
       if (!userId) {
         throw new ApplicationError("User ID is required", 400);
       }
 
-      if (!name || typeof name !== "string" || !name.trim()) {
-        throw new ApplicationError("Valid name is required", 400);
+      const updateData = {};
+
+      // Validate and add name if provided
+
+      if (name !== undefined) {
+        if (!name || typeof name !== "string" || !name.trim()) {
+          throw new ApplicationError("Valid name is required", 400);
+        }
+        updateData.name = name.trim();
       }
 
-      const allowedGenders = ["male", "female", "other"];
-      if (!gender || !allowedGenders.includes(gender.toLowerCase())) {
+      // Validate and add gender if provided
+      if (gender !== undefined) {
+        const allowedGenders = ["male", "female", "other"];
+        if (!allowedGenders.includes(gender.toLowerCase())) {
+          throw new ApplicationError(
+            `Gender must be one of: ${allowedGenders.join(", ")}`,
+            400
+          );
+        }
+        updateData.gender = gender.toLowerCase();
+      }
+
+      // If no fields provided at all
+      if (Object.keys(updateData).length === 0) {
         throw new ApplicationError(
-          `Gender must be one of: ${allowedGenders.join(", ")}`,
+          "At least one field (name or gender) is required",
           400
         );
       }
 
-      const updatedUser = await this.userRepository.updateUserById(userId, {
-        name: name.trim(),
-        gender: gender.toLowerCase(),
-      });
-
+      const updatedUser = await this.userRepository.updateUserById(
+        userId,
+        updateData
+      );
       if (!updatedUser) {
         throw new ApplicationError("User not found or not updated", 404);
       }
-
       return res.status(200).json({
         message: "User details updated successfully",
         updatedUser,

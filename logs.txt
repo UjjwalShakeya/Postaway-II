@@ -16,3 +16,14 @@
 [2025-08-31T10:57:57.618Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"ujjwal Shakeya","gender":"male"}
 [2025-08-31T10:58:32.017Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"ujjwal Shakeya","gender":"male"}
 [2025-08-31T10:58:52.945Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"Ujjwal Shakeya","gender":"male"}
+[2025-08-31T11:19:39.763Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"Ujjwal Shakeya","gender":"male"}
+[2025-08-31T11:20:04.521Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:23:06.393Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:24:09.696Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:24:49.107Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:25:32.807Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:36:09.198Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:37:42.424Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul"}
+[2025-08-31T11:38:03.173Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake paul","gender":"male"}
+[2025-08-31T11:38:14.928Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jake lucas"}
+[2025-08-31T11:38:29.262Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"gender":"female"}
