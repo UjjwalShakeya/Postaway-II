@@ -1,0 +1,18 @@
+[2025-08-31T10:35:19.027Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 Request Body Is Empty
+[2025-08-31T10:35:59.748Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 Request Body Is Empty
+[2025-08-31T10:36:40.880Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 {"name":"Shakeya"}
+[2025-08-31T10:40:47.416Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 {"name":"shenu","gender":"female"}
+[2025-08-31T10:42:30.573Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 {"name":"shenu","gender":"female"}
+[2025-08-31T10:42:55.244Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"shenu","gender":"female"}
+[2025-08-31T10:44:23.745Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"kenya","gender":"female"}
+[2025-08-31T10:44:51.101Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jean","gender":"female"}
+[2025-08-31T10:45:44.236Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"jeanie","gender":"female"}
+[2025-08-31T10:46:22.866Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"leavie","gender":"female"}
+[2025-08-31T10:48:21.301Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"lezie","gender":"female"}
+[2025-08-31T10:49:05.349Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"shenza","gender":"female"}
+[2025-08-31T10:52:50.091Z] info: PUT /api/users/update-details/68b426526ee84b45764ce48dd9 {"name":"shenza","gender":"female"}
+[2025-08-31T10:53:15.956Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 {"name":"shenza","gender":"female"}
+[2025-08-31T10:57:33.253Z] info: PUT /api/users/update-details/68b4252754c6b24c5fd4ef89 {"name":"ujjwal Shakeya","gender":"male"}
+[2025-08-31T10:57:57.618Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"ujjwal Shakeya","gender":"male"}
+[2025-08-31T10:58:32.017Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"ujjwal Shakeya","gender":"male"}
+[2025-08-31T10:58:52.945Z] info: PUT /api/users/update-details/68b426526ee84b064ce48dd9 {"name":"Ujjwal Shakeya","gender":"male"}

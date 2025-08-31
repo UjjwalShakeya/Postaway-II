@@ -15,5 +15,9 @@ userRouter.get("/get-all-details/", jwtAuth, (req, res, next) => {
   userControllerInc.getAllUsers(req, res, next);
 });
 
+userRouter.put("/update-details/:userId/", jwtAuth, (req, res, next) => {
+  userControllerInc.updateUserById(req, res, next);
+});
+
 
 export default userRouter;

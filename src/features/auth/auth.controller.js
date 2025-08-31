@@ -16,10 +16,10 @@ export default class AuthController {
 
   async SignUp(req, res, next) {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, gender } = req.body;
 
       // Double-check input
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !gender) {
         throw new ApplicationError("All fields are required", 400);
       }
 
@@ -31,7 +31,7 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new AuthModel(name, email, hashedPassword);
+      const user = new AuthModel(name, email, hashedPassword, gender);
 
       const result = await this.authRepository.signUp(user);
 
@@ -57,7 +57,12 @@ export default class AuthController {
 
       return res.status(201).json({
         message: "User created successfully",
-        user: { id: result._id, name: result.name, email: result.email },
+        user: {
+          id: result._id,
+          name: result.name,
+          gender: result.gender,
+          email: result.email,
+        },
         token,
         refreshToken,
         expiresIn: "1h",
@@ -195,7 +200,7 @@ export default class AuthController {
   async Logout(req, res, next) {
     try {
       const { refreshToken } = req.body;
-      
+
       const user = await this.authRepository.findByRefreshToken(refreshToken);
 
       // user not found
