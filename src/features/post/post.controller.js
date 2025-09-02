@@ -1,4 +1,5 @@
 // importing required modules
+import ApplicationError from "../../../utils/ApplicationError.js";
 import PostModel from "./post.model.js";
 import PostRepository from "./post.respository.js";
 
@@ -13,17 +14,10 @@ export default class PostController {
       const userID = req.userID;
       const { caption, status } = req.body;
 
-      if (!req.file) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Image file is required" });
-      }
+      if (!req.file) new ApplicationError("Image file is required", 400);
 
-      if (!caption || caption.trim() === "") {
-        return res
-          .status(400)
-          .json({ success: false, message: "Caption field is required" });
-      }
+      if (!caption || caption.trim() === "")
+        throw new ApplicationError("Caption field is required", 400);
 
       // Allow only valid statuses
       const allowedStatuses = ["published", "draft"];
@@ -54,27 +48,64 @@ export default class PostController {
   async getAllPosts(req, res, next) {
     try {
       const caption = req.query.caption || "";
-      const page = Math.max(parseInt(req.query.page) || 1, 1);
-      const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
 
-      const result = await this.postRepository.getAllPosts(
-        page,
-        limit,
-        caption
-      );
+      const posts = await this.postRepository.getAllPosts(page, limit, caption);
+
+      if (!posts) throw new ApplicationError("post not found", 400);
 
       res.status(200).json({
         success: true,
         message: "All posts",
-        data: result.posts,
+        data: posts.posts,
         pagination: {
-          totalPosts: result.totalPosts,
-          totalPages: result.totalPages,
-          currentPage: result.currentPage,
+          totalPosts: posts.totalPosts,
+          totalPages: posts.totalPages,
+          currentPage: posts.currentPage,
         },
       });
+
     } catch (err) {
       next(err); // error handled by middleware
+    }
+  }
+
+  // retrieve post by the id
+  async getPostById(req, res, next) {
+    try {
+      const id = req.params.id;
+
+      // Validate ID before querying
+      if (!id) throw new ApplicationError("Invalid id", 400);
+
+      const post = await this.postRepository.getPostById(id);
+
+      if (!post) throw new ApplicationError("post not found", 404);
+
+      res
+        .status(200)
+        .json({ success: true, message: "Post found by ID", data: post });
+    } catch (err) {
+      next(err); // calling next with error, error will be caught by errorhandler Middleware
+    }
+  }
+
+  // retrieve post by the user credentials
+  async getPostsByUser(req, res, next) {
+    try {
+      const userID = req.params.userId;
+      if (!userID) throw new ApplicationError("User ID required", 400);
+
+      const postsByUserId = await this.postRepository.findByUserId(userID);
+
+      if (!postsByUserId) throw new ApplicationError("posts of user not found", 404);
+
+      res
+        .status(200)
+        .json({ success: true, message: "Post found", data: postsByUserId });
+    } catch (err) {
+      next(err); // calling next with error, error will be caught by errorhandler Middleware
     }
   }
 
@@ -98,50 +129,6 @@ export default class PostController {
   //       message: "Filtered posts retrieved successfully",
   //       data: filteredPosts,
   //     });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
-
-  // retrieve post by the id
-  async getPostById(req, res, next) {
-    try {
-      const id = req.params.id;
-
-      // Validate ID before querying
-      if (!id) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid post ID" });
-      }
-
-      const post = await this.postRepository.getPostById(id);
-
-      if (!post) {
-        return res
-          .status(404)
-          .json({ success: false, message: "post not found" });
-      }
-
-      res
-        .status(200)
-        .json({ success: true, message: "Post found by ID", data: post });
-
-    } catch (err) {
-      next(err); // calling next with error, error will be caught by errorhandler Middleware
-    }
-  };
-
-  // // retrieve post by the user credentials
-  // async getPostsByUser(req, res, next) {
-  //   try {
-  //     const userID = req.userID;
-  //     if (!userID) throw new ApplicationError("User ID required", 400);
-
-  //     const postsByUserId = await PostModel.findByUserId(userID);
-  //     res
-  //       .status(200)
-  //       .json({ success: true, message: "Post found", data: postsByUserId });
   //   } catch (err) {
   //     next(err); // calling next with error, error will be caught by errorhandler Middleware
   //   }

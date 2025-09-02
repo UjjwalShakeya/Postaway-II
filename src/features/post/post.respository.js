@@ -72,7 +72,7 @@ export default class PostRepository {
         {
           $match: {
             _id: new ObjectId(postId),
-            status: { $nin: ["draft", "archived"] }, // exclude drafts directly
+            status: { $nin: ["draft", "archived"] }, // exclude drafts and archived directly
           },
         },
         {
@@ -82,7 +82,34 @@ export default class PostRepository {
 
       const results = await collection.aggregate(pipeline).toArray();
 
-      return results.length > 0 ? results[0] : null;
+      return results;
+    } catch (err) {
+      throw new ApplicationError("Error fetching post: " + err.message, 500);
+    }
+  }
+
+  async findByUserId(userId) {
+    try {
+      // 1. getting db
+      const db = getDB();
+
+      // 2. getting collection
+      const collection = db.collection(this.collection);
+
+      // Aggregation pipeline
+      const pipeline = [
+        {
+          $match: {
+            userId: userId,
+            status: { $nin: ["draft", "archived"] },
+          },
+        },
+        {
+          $limit:1
+        }
+      ];
+
+      return await collection.aggregate(pipeline).toArray();
       
     } catch (err) {
       throw new ApplicationError("Error fetching post: " + err.message, 500);
