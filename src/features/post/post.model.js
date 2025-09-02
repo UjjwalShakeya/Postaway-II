@@ -1,7 +1,7 @@
 // importing importand modules
-import ApplicationError from "../../../utils/ApplicationError.js";
-import LikeModel from "../like/like.model.js";
-import CommentModel from "../comment/comment.model.js";
+// import ApplicationError from "../../../utils/ApplicationError.js";
+// import LikeModel from "../like/like.model.js";
+// import CommentModel from "../comment/comment.model.js";
 
 export let posts = [
   {

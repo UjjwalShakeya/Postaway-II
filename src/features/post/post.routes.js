@@ -11,10 +11,10 @@ const PostControllerInc = new PostController();
 // creating post router with express
 const PostRouter = express.Router();
 
-// // Retrieve all posts
-// PostRouter.get("/all", (req, res, next) =>
-//   PostControllerInc.getAllPosts(req, res, next)
-// ); // Retrieve all posts
+// Retrieve all posts
+PostRouter.get("/all", (req, res, next) =>
+  PostControllerInc.getAllPosts(req, res, next)
+); // Retrieve all posts
 
 // PostRouter.get("/filter", (req, res, next) =>
 //   PostControllerInc.getFilteredPosts(req, res, next)
@@ -29,13 +29,13 @@ const PostRouter = express.Router();
 //   PostControllerInc.getSortedPosts(req, res, next)
 // );
 
-// // PostRouter.post("/", jwtAuth, upload.single("imageUrl"), (req, res, next) =>
-// //   PostControllerInc.createPost(req, res, next)
-// ); // create a new post
+PostRouter.post("/", jwtAuth, upload.single("imageUrl"), (req, res, next) =>
+  PostControllerInc.createPost(req, res, next)
+); // create a new post
 
-// PostRouter.get("/:id", (req, res, next) =>
-//   PostControllerInc.getPostById(req, res, next)
-// ); // Retrieve a specific post by id
+PostRouter.get("/:id", (req, res, next) =>
+  PostControllerInc.getPostById(req, res, next)
+); // Retrieve a specific post by id
 
 // PostRouter.delete("/:id", jwtAuth, (req, res, next) =>
 //   PostControllerInc.deletePost(req, res, next)

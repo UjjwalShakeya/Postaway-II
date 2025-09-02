@@ -51,28 +51,32 @@ export default class PostController {
   }
 
   // // retrieve all posts
-  // async getAllPosts(req, res, next) {
-  //   try {
-  //     const caption = req.query.caption || "";
-  //     const page = Math.max(parseInt(req.query.page) || 1, 1);
-  //     const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+  async getAllPosts(req, res, next) {
+    try {
+      const caption = req.query.caption || "";
+      const page = Math.max(parseInt(req.query.page) || 1, 1);
+      const limit = Math.max(parseInt(req.query.limit) || 10, 1);
 
-  //     const result = await PostModel.findAll(page, limit, caption);
+      const result = await this.postRepository.getAllPosts(
+        page,
+        limit,
+        caption
+      );
 
-  //     res.status(200).json({
-  //       success: true,
-  //       message: "All posts",
-  //       data: result.posts,
-  //       pagination: {
-  //         totalPosts: result.totalPosts,
-  //         totalPages: result.totalPages,
-  //         currentPage: result.currentPage,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     next(err); // error handled by middleware
-  //   }
-  // }
+      res.status(200).json({
+        success: true,
+        message: "All posts",
+        data: result.posts,
+        pagination: {
+          totalPosts: result.totalPosts,
+          totalPages: result.totalPages,
+          currentPage: result.currentPage,
+        },
+      });
+    } catch (err) {
+      next(err); // error handled by middleware
+    }
+  }
 
   // // retrieve filtered posts
   // async getFilteredPosts(req, res, next) {
@@ -99,24 +103,34 @@ export default class PostController {
   //   }
   // }
 
-  // // retrieve post by the id
-  // async getPostById(req, res, next) {
-  //   try {
-  //     const id = parseInt(req.params.id);
-  //     // Validate ID before querying
-  //     if (isNaN(id)) {
-  //       return res
-  //         .status(400)
-  //         .json({ success: false, message: "Invalid post ID" });
-  //     }
-  //     const post = await PostModel.findById(id);
-  //     res
-  //       .status(200)
-  //       .json({ success: true, message: "Post found by ID", data: post });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
+  // retrieve post by the id
+  async getPostById(req, res, next) {
+    try {
+      const id = req.params.id;
+
+      // Validate ID before querying
+      if (!id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid post ID" });
+      }
+
+      const post = await this.postRepository.getPostById(id);
+
+      if (!post) {
+        return res
+          .status(404)
+          .json({ success: false, message: "post not found" });
+      }
+
+      res
+        .status(200)
+        .json({ success: true, message: "Post found by ID", data: post });
+
+    } catch (err) {
+      next(err); // calling next with error, error will be caught by errorhandler Middleware
+    }
+  };
 
   // // retrieve post by the user credentials
   // async getPostsByUser(req, res, next) {
