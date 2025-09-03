@@ -84,11 +84,14 @@ export default class PostRepository {
 
       return results;
     } catch (err) {
-      throw new ApplicationError("Error fetching post: " + err.message, 500);
+      throw new ApplicationError(
+        "Error fetching post by postId: " + err.message,
+        500
+      );
     }
   }
 
-  async findByUserId(userId) {
+  async getPostsByUserCred(userId) {
     try {
       // 1. getting db
       const db = getDB();
@@ -104,15 +107,35 @@ export default class PostRepository {
             status: { $nin: ["draft", "archived"] },
           },
         },
-        {
-          $limit:1
-        }
       ];
 
       return await collection.aggregate(pipeline).toArray();
-      
     } catch (err) {
-      throw new ApplicationError("Error fetching post: " + err.message, 500);
+      throw new ApplicationError(
+        "Error fetching post by user: " + err.message,
+        500
+      );
+    }
+  }
+  async deletePost(postID, userID) {
+    try {
+      // getting database
+      const db = getDB();
+
+      // getting collection
+      const collection = db.collection(this.collection);
+
+      const result = await collection.deleteOne({
+        _id: new ObjectId(postID),
+        userId: userID,
+      });
+
+      if (result.deletedCount === 0)
+        throw new ApplicationError("No matching post found to delete", 404);
+
+      return result;
+    } catch (err) {
+      throw new ApplicationError("Error deleting Post: " + err.message, 500);
     }
   }
 }

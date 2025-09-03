@@ -28,15 +28,18 @@ PostRouter.post("/", jwtAuth, upload.single("imageUrl"), (req, res, next) =>
 
 // Retrieve post on the user credentials
 PostRouter.get("/user/:userId", jwtAuth, (req, res, next) =>
-  PostControllerInc.getPostsByUser(req, res, next)
+  PostControllerInc.getPostsByUserCred(req, res, next)
 ); 
 
+// delete a specific post by id
+PostRouter.delete("/:postId", jwtAuth, (req, res, next) =>
+  PostControllerInc.deletePost(req, res, next)
+); 
 
-
+// Get posts on the basis of filter
 // PostRouter.get("/filter", (req, res, next) =>
 //   PostControllerInc.getFilteredPosts(req, res, next)
-// ); // Get posts on the basis of filter
-
+// ); 
 
 
 // // route for sorted posts
@@ -44,10 +47,6 @@ PostRouter.get("/user/:userId", jwtAuth, (req, res, next) =>
 //   PostControllerInc.getSortedPosts(req, res, next)
 // );
 
-
-// PostRouter.delete("/:id", jwtAuth, (req, res, next) =>
-//   PostControllerInc.deletePost(req, res, next)
-// ); // delete a specific post by id
 
 // PostRouter.put("/:id", jwtAuth, (req, res, next) =>
 //   PostControllerInc.updatePost(req, res, next)

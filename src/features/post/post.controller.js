@@ -92,18 +92,38 @@ export default class PostController {
   }
 
   // retrieve post by the user credentials
-  async getPostsByUser(req, res, next) {
+  async getPostsByUserCred(req, res, next) {
     try {
       const userID = req.params.userId;
       if (!userID) throw new ApplicationError("User ID required", 400);
 
-      const postsByUserId = await this.postRepository.findByUserId(userID);
+      const postsByUserId = await this.postRepository.getPostsByUserCred(userID);
 
       if (!postsByUserId) throw new ApplicationError("posts of user not found", 404);
 
       res
         .status(200)
         .json({ success: true, message: "Post found", data: postsByUserId });
+    } catch (err) {
+      next(err); // calling next with error, error will be caught by errorhandler Middleware
+    }
+  }
+
+  async deletePost(req, res, next) {
+    try {
+
+      const postID = req.params.postId;
+      const userID = req.userID;
+
+      if (!postID || !userID) throw new ApplicationError("Post ID And User ID Both required", 400);
+      
+      const deletedPost = await this.postRepository.deletePost(postID,userID);
+
+      res.status(200).json({
+        success: true,
+        message: `post has been deleted`,
+        data: deletedPost,
+      });
     } catch (err) {
       next(err); // calling next with error, error will be caught by errorhandler Middleware
     }
@@ -134,26 +154,6 @@ export default class PostController {
   //   }
   // }
 
-  // // update the new post
-  // async deletePost(req, res, next) {
-  //   try {
-  //     const postID = parseInt(req.params.id);
-
-  //     if (Number.isNaN(postID)) {
-  //       return res.status(400).json({ message: "Valid post ID is required" });
-  //     }
-
-  //     const deletedPost = await PostModel.delete(postID);
-  //     res.status(200).json({
-  //       success: true,
-  //       message: `${postID} post has been deleted`,
-  //       data: deletedPost,
-  //     });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
-
   // // update the specific post
   // async updatePost(req, res, next) {
   //   try {
@@ -176,6 +176,7 @@ export default class PostController {
   //   }
   // }
 
+  
   // // update the specific post status
   // async postStatus(req, res, next) {
   //   try {
@@ -207,6 +208,8 @@ export default class PostController {
   //     next(err); // calling next with error, error will be caught by errorhandler Middleware
   //   }
   // }
+
+
   // // Implement sorting of posts based on user engagement and date
   // async getSortedPosts(req, res, next) {
   //   try {
