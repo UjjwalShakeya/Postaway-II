@@ -57,7 +57,7 @@ export default class PostRepository {
         currentPage: pageNum,
       };
     } catch (err) {
-      throw new ApplicationError("Error fetching posts: " + err.message, 500);
+      throw new ApplicationError("Something went wrong with database", 500);
     }
   }
   async getPostById(postId) {
@@ -84,10 +84,7 @@ export default class PostRepository {
 
       return results;
     } catch (err) {
-      throw new ApplicationError(
-        "Error fetching post by postId: " + err.message,
-        500
-      );
+      throw new ApplicationError("Something went wrong with database", 500);
     }
   }
 
@@ -111,10 +108,7 @@ export default class PostRepository {
 
       return await collection.aggregate(pipeline).toArray();
     } catch (err) {
-      throw new ApplicationError(
-        "Error fetching post by user: " + err.message,
-        500
-      );
+      throw new ApplicationError("Something went wrong with database", 500);
     }
   }
   async deletePost(postID, userID) {
@@ -135,7 +129,27 @@ export default class PostRepository {
 
       return result;
     } catch (err) {
-      throw new ApplicationError("Error deleting Post: " + err.message, 500);
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+  async updatePost(userID, postID, data) {
+    try {
+      //1.  getting db
+      const db = getDB();
+
+      // 2. getting collection
+      const collection = db.collection(this.collection);
+
+      const updatedUser = await collection.findOneAndUpdate(
+        { _id: new ObjectId(postID), userId: userID },
+        { $set: data },
+        { returnDocument: "after" }
+      );
+
+      return updatedUser;
+
+    } catch (err) {
+      throw new ApplicationError("Error fetching post: " + err.message, 500);
     }
   }
 }

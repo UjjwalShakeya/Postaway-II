@@ -3,6 +3,7 @@ import ApplicationError from "../../../utils/ApplicationError.js";
 import PostModel from "./post.model.js";
 import PostRepository from "./post.respository.js";
 
+
 export default class PostController {
   constructor() {
     this.postRepository = new PostRepository();
@@ -129,6 +130,30 @@ export default class PostController {
     }
   }
 
+  // update the specific post
+  async updatePost(req, res, next) {
+    try {
+      const userID = req.userID;
+      const postID = req.params.postId;
+      const newData = req.body;
+      
+      if (!postID || !userID) throw new ApplicationError("Missing post ID or user ID", 400);
+      if (newData.userId) throw new ApplicationError("you can't perform this action", 400);
+
+      const updatedPost = await this.postRepository.updatePost(userID, postID, newData);
+  
+      if (!updatedPost) throw new ApplicationError("Post not found or update failed", 404);
+      
+      res.status(200).json({
+        success: true,
+        message: `${postID} post has been updated`,
+        data: updatedPost,
+      });
+    } catch (err) {
+      next(err); // calling next with error, error will be caught by errorhandler Middleware
+    }
+  }
+
   // // retrieve filtered posts
   // async getFilteredPosts(req, res, next) {
   //   try {
@@ -143,7 +168,7 @@ export default class PostController {
   //         .status(404)
   //         .json({ message: "No posts found with given caption" });
   //     }
-
+  
   //     res.status(200).json({
   //       success: true,
   //       message: "Filtered posts retrieved successfully",
@@ -154,27 +179,6 @@ export default class PostController {
   //   }
   // }
 
-  // // update the specific post
-  // async updatePost(req, res, next) {
-  //   try {
-  //     const userID = req.userID;
-  //     const postID = parseInt(req.params.id);
-  //     const newData = req.body;
-
-  //     if (!postID || !userID)
-  //       throw new ApplicationError("Missing post ID or user ID", 400);
-
-  //     const updatedPost = await PostModel.update(userID, postID, newData);
-
-  //     res.status(200).json({
-  //       success: true,
-  //       message: `${postID} post has been updated`,
-  //       data: updatedPost,
-  //     });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
 
   
   // // update the specific post status
