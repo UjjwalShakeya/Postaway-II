@@ -43,7 +43,7 @@ export default class PostController {
     } catch (err) {
       next(err); // calling next with error, error will be caught by errorhandler Middleware
     }
-  }
+  };
 
   // // retrieve all posts
   async getAllPosts(req, res, next) {
@@ -181,7 +181,7 @@ export default class PostController {
 
 
   
-  // // update the specific post status
+  // update the specific post status
   // async postStatus(req, res, next) {
   //   try {
   //     const postID = parseInt(req.params.id);

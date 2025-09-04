@@ -36,10 +36,17 @@ PostRouter.delete("/:postId", jwtAuth, (req, res, next) =>
   PostControllerInc.deletePost(req, res, next)
 ); 
 
+// Update a specific post by ID (Image upload functionality included)
 PostRouter.put("/:postId", jwtAuth, (req, res, next) =>
   PostControllerInc.updatePost(req, res, next)
-); // Update a specific post by ID (Image upload functionality included)
+); 
 
+
+
+// check a specific post status
+// PostRouter.patch("/:id/status", jwtAuth, (req, res, next) =>
+//   PostControllerInc.postStatus(req, res, next)
+// ); 
 
 // Get posts on the basis of filter
 // PostRouter.get("/filter", (req, res, next) =>
@@ -52,9 +59,5 @@ PostRouter.put("/:postId", jwtAuth, (req, res, next) =>
 //   PostControllerInc.getSortedPosts(req, res, next)
 // );
 
-
-// PostRouter.patch("/:id/status", jwtAuth, (req, res, next) =>
-//   PostControllerInc.postStatus(req, res, next)
-// ); // check a specific post status
 
 export default PostRouter;
