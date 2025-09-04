@@ -9,9 +9,9 @@ import jwtAuth from "../../middlewares/jwt.middleware.js";
 const CommentControllerInc = new CommentController();
 
 // retrieving all the comments of specific post
-// commentRouter.get("/:id", jwtAuth, (req, res, next) =>
-//   CommentControllerInc.getAll(req, res, next)
-// );
+commentRouter.get("/:postId", jwtAuth, (req, res, next) =>
+  CommentControllerInc.getAllPostComments(req, res, next)
+);
 
 // add a new comment to a specific post
 commentRouter.post("/:postId", jwtAuth, (req, res, next) =>
