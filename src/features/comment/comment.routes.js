@@ -18,10 +18,10 @@ commentRouter.post("/:postId", jwtAuth, (req, res, next) =>
   CommentControllerInc.createComment(req, res, next)
 );
 
-// // // remove specific comment by id
-// commentRouter.delete("/:id", jwtAuth, (req, res, next) =>
-//   CommentControllerInc.deleteComment(req, res, next)
-// );
+// remove specific comment by id
+commentRouter.delete("/:commentId", jwtAuth, (req, res, next) =>
+  CommentControllerInc.deleteComment(req, res, next)
+);
 
 // // // update specific comment by id
 // commentRouter.put("/:id", jwtAuth, (req, res, next) =>

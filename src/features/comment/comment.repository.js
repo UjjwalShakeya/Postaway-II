@@ -1,6 +1,7 @@
 // importing important modules
 import { getDB } from "../../config/mongodb.js";
 import ApplicationError from "../../../utils/ApplicationError.js";
+import { ObjectId } from "mongodb";
 
 export default class CommentRepository {
   constructor() {
@@ -35,17 +36,17 @@ export default class CommentRepository {
 
       // Fetch comments with pagination
       const comments = await collection
-        .find({ postId : postId })
+        .find({ postId: postId })
         .skip(skip)
         .limit(limit)
         .toArray();
-        
+
       if (!comments || comments.length === 0) {
         throw new ApplicationError("No comments found for this post", 404);
       }
 
       // Count total comments for pagination metadata
-      const totalComments = await collection.countDocuments({ postId : postId });
+      const totalComments = await collection.countDocuments({ postId: postId });
       return {
         comments,
         totalComments,
@@ -58,5 +59,20 @@ export default class CommentRepository {
         500
       );
     }
+  }
+
+  async deleteComment(id, userId) {
+    // 1. getting db
+    const db = getDB();
+
+    // 2. getting collection
+    const collection = db.collection(this.collection);
+
+    const deletedComment = await collection.deleteOne({ _id: new ObjectId(id), userId: userId });
+    
+    if (!deletedComment || deletedComment.deletedCount <= 0) {
+      throw new ApplicationError("Something went wrong deleting comment", 500);
+    }
+    return deletedComment;
   }
 }
