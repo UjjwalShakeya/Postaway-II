@@ -1,4 +1,5 @@
 // importing important modules
+import ApplicationError from "../../../utils/ApplicationError.js";
 import { getDB } from "../../config/mongodb.js";
 import LikeModel from "./like.model.js";
 import { ObjectId } from "mongodb";
@@ -22,7 +23,7 @@ export default class LikeRepository {
       });
 
       return likeExist;
-      
+
     } catch (err) {
       throw new ApplicationError("Error finding like: " + err.message, 500);
     }
@@ -68,6 +69,27 @@ export default class LikeRepository {
       return newLike;
     } catch (err) {
       throw new ApplicationError("Error adding a new like: " + err.message, 500);
+    }
+  };
+
+  async getAllLikes(postId) {
+    try {
+      // 1. getting db
+      const db = getDB();
+      // 2. getting collection
+      const collection = db.collection(this.collection);
+      
+      // 3. fetching all likes for a post
+      const allLikes = await collection.find({ postId: new ObjectId(postId) }).toArray();
+
+      if (!allLikes || allLikes.length === 0) {
+        throw new ApplicationError("No likes found", 404);
+      }
+
+      return allLikes;
+      
+    } catch (err) {
+      throw new ApplicationError("Error fetching likes: " + err.message, 500);
     }
   }
 }

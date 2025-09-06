@@ -11,16 +11,23 @@ export default class LikeController {
 
   async getAllLikes(req, res, next) {
     try {
-      const postId = parseInt(req.params.postid);
+      const postId = req.params.id;
 
-      if (isNaN(postId)) {
-        throw new ApplicationError("Invalid post ID", 400);
+      if (!postId) {
+        throw new ApplicationError("Missing post ID", 400);
       }
-      const allLikes = await LikeModel.getAll(postId);
+      
+      // Check if post exists
+      const postExists = await this.postRepository.getPostById(postId);
+      if (!postExists) {
+        throw new ApplicationError("Post not found", 404);
+      }
+      // Fetch all likes for the post
+      const allLikes = await this.likeRepository.getAllLikes(postId);
 
       res.status(200).json({
         success: true,
-        message: `All likes have been retrieved from specific post`,
+        message: `All likes have been retrieved `,
         data: allLikes, // standardize key as `data`
       });
     } catch (err) {

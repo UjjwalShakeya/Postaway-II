@@ -17,9 +17,4 @@ LikeRouter.get("/:id", jwtAuth, (req, res, next) =>
   LikeControllerInc.getAllLikes(req, res, next)
 );
 
-// deleting the like on delete request
-// LikeRouter.delete("/toggle/:postid", jwtAuth, (req, res, next) =>
-//   LikeControllerInc.deleteLike(req, res, next)
-// );
-
 export default LikeRouter;
