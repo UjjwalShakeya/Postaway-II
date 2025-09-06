@@ -23,10 +23,10 @@ commentRouter.delete("/:commentId", jwtAuth, (req, res, next) =>
   CommentControllerInc.deleteComment(req, res, next)
 );
 
-// // // update specific comment by id
-// commentRouter.put("/:id", jwtAuth, (req, res, next) =>
-//   CommentControllerInc.updateComment(req, res, next)
-// );
+// update specific comment by id
+commentRouter.put("/:commentId", jwtAuth, (req, res, next) =>
+  CommentControllerInc.updateComment(req, res, next)
+);
 
 
 export default commentRouter;

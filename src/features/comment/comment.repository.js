@@ -62,17 +62,61 @@ export default class CommentRepository {
   }
 
   async deleteComment(id, userId) {
-    // 1. getting db
-    const db = getDB();
+    try {
+      // 1. getting db
+      const db = getDB();
 
-    // 2. getting collection
-    const collection = db.collection(this.collection);
+      // 2. getting collection
+      const collection = db.collection(this.collection);
 
-    const deletedComment = await collection.deleteOne({ _id: new ObjectId(id), userId: userId });
-    
-    if (!deletedComment || deletedComment.deletedCount <= 0) {
-      throw new ApplicationError("Something went wrong deleting comment", 500);
+      const deletedComment = await collection.deleteOne({
+        _id: new ObjectId(id),
+        userId: userId,
+      });
+
+      if (!deletedComment || deletedComment.deletedCount <= 0) {
+        throw new ApplicationError(
+          "Something went wrong deleting comment",
+          500
+        );
+      }
+      return deletedComment;
+    } catch (err) {
+      throw new ApplicationError(
+        "Error deleting comments: " + err.message,
+        500
+      );
     }
-    return deletedComment;
+  }
+
+  async updateComment(commentId, userId, comment) {
+    try {
+      // 1. getting db
+      const db = getDB();
+
+      // 2. getting collection
+      const collection = db.collection(this.collection);
+
+      const updatedComment = await collection.updateOne(
+        {
+          _id: new ObjectId(commentId),
+          userId: userId,
+        },
+        { $set: {comment} }
+      );
+      if (!updatedComment || updatedComment.deletedCount <= 0) {
+        throw new ApplicationError(
+          "Something went wrong updating comment",
+          500
+        );
+      }
+      
+
+    } catch (err) {
+      throw new ApplicationError(
+        "Error updating comment: " + err.message,
+        500
+      );
+    }
   }
 }

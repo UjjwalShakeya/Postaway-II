@@ -106,7 +106,7 @@ export default class CommentController {
 
   async updateComment(req, res, next) {
     try {
-      const commentId = parseInt(req.params.id);
+      const commentId = req.params.commentId;
       const { comment } = req.body;
       const userId = req.userID;
 
@@ -118,14 +118,15 @@ export default class CommentController {
         throw new ApplicationError("Comment content cannot be empty", 400);
       }
 
-      const updatedComment = await CommentModel.update(
+      const updatedComment = await this.commentRepository.updateComment(
         commentId,
-        comment,
-        userId
+        userId,
+        comment, 
       );
+
       res.status(200).json({
         success: true,
-        message: `You comment with id ${commentId} has been deleted`,
+        message: `You comment with id ${commentId} has been updated`,
         data: updatedComment,
       });
     } catch (err) {
