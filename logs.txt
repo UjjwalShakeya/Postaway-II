@@ -1,5 +1,0 @@
-[2025-09-05T19:07:30.412Z] info: PUT /api/comments/68bb2e5fd1428e25b8fc2eb1 {"comment":"new Comment"}
-[2025-09-05T19:08:02.245Z] info: PUT /api/comments/68bb2e5fd1428e25b8fc2eb1 {"comment":"new Comment"}
-[2025-09-05T19:08:39.977Z] info: PUT /api/comments/68bb2e5fd1428e25b8fc2eb1 {"postId":"new Comment"}
-[2025-09-05T19:09:02.652Z] info: PUT /api/comments/68bb2e5fd1428e25b8fc2eb1 {"comment":"new Comment 1"}
-[2025-09-06T16:02:57.157Z] info: DELETE /api/comments/68bb2e5fd1428e25b8fc2eb1 Request Body Is Empty
