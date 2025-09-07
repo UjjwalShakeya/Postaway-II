@@ -41,45 +41,50 @@ export default class AuthRepository {
       throw new ApplicationError("Something went wrong with database", 500);
     }
   }
-
-  async setResetToken(email, token, expiry) {
+  async setOTP(email, otp, otpExpiry) {
     try {
+      // 1. get db
       const db = getDB();
 
+      // 2. get collection
       const collection = db.collection(this.collection);
 
-      await collection.updateOne(
-        { email },
-        { $set: { resetToken: token, resetTokenExpiry: expiry } }
+      collection.updateOne({ email: email }, { $set: { otp, otpExpiry } });
+    } catch (err) {
+      throw new ApplicationError("Something went wrong with database", 500);
+    }
+  }
+
+  async clearOTP(email) {
+    try {
+      // 1. get db
+      const db = getDB();
+
+      // 2. get collection
+      const collection = db.collection(this.collection);
+
+      collection.updateOne(
+        { email: email },
+        { $unset: { otp: "", otpExpiry: "" } }
       );
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
   }
 
-  async findByResetToken(token) {
+  // Update password after OTP verified
+  async updatePassword(email, newPassword) {
     try {
+      // 1. get db
       const db = getDB();
-
-      const collection = db.collection(this.collection);
-
-      return await collection.findOne({ resetToken: token });
-    } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
-    }
-  }
-
-  async updatePasswordWithToken(token, newPassword) {
-    try {
-      const db = getDB();
-
+      // 2. get collection
       const collection = db.collection(this.collection);
 
       return await collection.updateOne(
-        { resetToken: token },
+        { email },
         {
           $set: { password: newPassword },
-          $unset: { resetToken: "", resetTokenExpiry: "" },
+          $unset: { otp: "", otpExpiry: "" },
         }
       );
     } catch (err) {

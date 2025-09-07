@@ -1,8 +1,14 @@
 // imported important Packages
+
+// Core imports
 import express from "express";
+
+// Middlewares
 import validateUser from "../../middlewares/validator.middleware.js";
-import AuthController from "./auth.controller.js";
 import jwtAuth from "../../middlewares/jwt.middleware.js";
+
+// Controller
+import AuthController from "./auth.controller.js";
 
 // making instance of authController
 const authControllerInc = new AuthController();
@@ -10,32 +16,59 @@ const authControllerInc = new AuthController();
 // creating router from express
 const authRouter = express.Router();
 
-// auth router for signup
+/**
+ * Route: POST /signup
+ * Purpose: Register a new user
+ * Middlewares: validateUser → ensures request body has required fields
+ */
 authRouter.post("/signup", validateUser, (req, res, next) =>
   authControllerInc.SignUp(req, res, next)
 );
 
-// auth router for signin
+/**
+ * Route: POST /signin
+ * Purpose: Authenticate a user and issue tokens
+ */
 authRouter.post("/signin", (req, res, next) =>
   authControllerInc.SignIn(req, res, next)
 );
 
-// auth router for forget password
-authRouter.post("/forget-password", (req, res, next) => {
-  authControllerInc.ForgetPassword(req, res, next);
+/**
+ * Route: POST /forget-password
+ * Purpose: Send reset password link via email
+ */
+
+authRouter.post("/otp/send", (req, res, next) => {
+  authControllerInc.SendOTP(req, res, next);
 });
 
-// auth router for reset password
-authRouter.post("/reset-password/:token", (req, res, next) => {
-  authControllerInc.ResetPasswordWithToken(req, res, next);
+authRouter.post("/otp/verify", (req, res, next) => {
+  authControllerInc.VerifyOTP(req, res, next);
 });
 
-// auth router for logout
+
+/**
+ * Route: POST /reset-password/:token
+ * Purpose: Reset password using emailed token
+ */
+// authRouter.post("/reset-password/:token", (req, res, next) => {
+//   authControllerInc.ResetPasswordWithToken(req, res, next);
+// });
+
+/**
+ * Route: POST /logout
+ * Purpose: Logout from current device (invalidate refresh token)
+ * Middleware: jwtAuth → ensures request has a valid access token
+ */
 authRouter.post("/logout", jwtAuth, (req, res, next) => {
   authControllerInc.Logout(req, res, next);
 });
 
-// auth router for logout
+/**
+ * Route: POST /logout-all-devices
+ * Purpose: Logout from all devices (clear all refresh tokens)
+ * Middleware: jwtAuth → ensures request has a valid access token
+ */
 authRouter.post("/logout-all-devices", jwtAuth, (req, res, next) => {
   authControllerInc.LogoutAll(req, res, next);
 });
