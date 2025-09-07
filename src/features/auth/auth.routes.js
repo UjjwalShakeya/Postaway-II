@@ -45,6 +45,9 @@ authRouter.post("/otp/send", (req, res, next) => {
 authRouter.post("/otp/verify", (req, res, next) => {
   authControllerInc.VerifyOTP(req, res, next);
 });
+authRouter.post("/otp/reset-password", (req, res, next) => {
+  authControllerInc.ResetPasswordWithOTP(req, res, next);
+});
 
 
 /**

@@ -153,7 +153,7 @@ export default class AuthController {
     try {
       const { email, otp } = req.body;
 
-      const user = this.authRepository.findByEmail(email);
+      const user = await this.authRepository.findByEmail(email);
 
       if (!user || user.otp !== otp || Date.now() > user.otpExpiry) {
         throw new ApplicationError("Invalid or expired OTP", 400);
