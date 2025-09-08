@@ -17,7 +17,7 @@ export default class AuthController {
     this.authRepository = new AuthRepository();
   }
 
-  async SignUp(req, res, next) {
+  SignUp = async (req, res, next) => {
     try {
       const { name, email, password, gender } = req.body;
 
@@ -38,8 +38,7 @@ export default class AuthController {
 
       const result = await this.authRepository.signUp(user);
 
-      const { accessToken, refreshToken, expiresIn } =
-        this.generateTokens(result);
+      const { accessToken, refreshToken, expiresIn } = await this.generateTokens(result);
 
       await this.authRepository.addRefreshToken(result._id, refreshToken);
 
@@ -58,9 +57,9 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-  async SignIn(req, res, next) {
+  SignIn = async (req, res, next) => {
     try {
       const { email, password } = req.body;
 
@@ -80,8 +79,7 @@ export default class AuthController {
         throw new ApplicationError("Invalid Credentials", 401);
       }
 
-      const { accessToken, refreshToken, expiresIn } =
-        this.generateTokens(user);
+      const { accessToken, refreshToken, expiresIn } = await this.generateTokens(user);
 
       await this.authRepository.addRefreshToken(user._id, refreshToken);
 
@@ -96,7 +94,7 @@ export default class AuthController {
     }
   }
 
-  async SendOTP(req, res, next) {
+  SendOTP = async(req, res, next)=> {
     try {
       const { email } = req.body;
       // checking first whether user is exist in the db or not
@@ -121,7 +119,7 @@ export default class AuthController {
     }
   }
 
-  async VerifyOTP(req, res, next) {
+   VerifyOTP = async(req, res, next) => {
     try {
       const { email, otp } = req.body;
 
@@ -139,7 +137,7 @@ export default class AuthController {
     }
   }
 
-  async ResetPasswordWithOTP(req, res, next) {
+   ResetPasswordWithOTP = async(req, res, next)=> {
     try {
       const { email, newPassword } = req.body;
 
@@ -160,7 +158,7 @@ export default class AuthController {
     }
   }
 
-  async sendOTPEmail(email, otp) {
+   sendOTPEmail = async(email, otp) =>{
     try {
       await sendEmail(
         email,
@@ -172,8 +170,8 @@ export default class AuthController {
       throw new ApplicationError("Failed to send OTP email", 400);
     }
   }
-  
-  generateTokens(user) {
+
+  generateTokens = async(user) => {
     const accessToken = jwt.sign(
       { userID: user._id, email: user.email },
       jwtSecret,
@@ -190,7 +188,7 @@ export default class AuthController {
   }
 
   // logout
-  async Logout(req, res, next) {
+   Logout = async(req, res, next)=> {
     try {
       const { refreshToken } = req.body;
 
@@ -210,7 +208,7 @@ export default class AuthController {
   }
 
   // logout all
-  async LogoutAll(req, res, next) {
+   LogoutAll = async(req, res, next) => {
     try {
       const userId = req.userID;
 
