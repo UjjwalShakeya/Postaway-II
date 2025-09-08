@@ -1,21 +1,21 @@
 // importing important modules
 
 // Core imports
-import { ObjectId } from "mongodb"; 
+import { ObjectId } from "mongodb";
 import { getDB } from "../../config/mongodb.js";
 
 import ApplicationError from "../../../utils/ApplicationError.js";
 
 export default class AuthRepository {
   constructor() {
-     // Name of the collection used for authentication-related data
+    // Name of the collection used for authentication-related data
     this.collection = "users";
   }
 
   getCollection() {
     const db = getDB();
     return db.collection(this.collection);
-  };
+  }
 
   // Create a new user document in the DB
   async signUp(newUser) {
@@ -27,7 +27,6 @@ export default class AuthRepository {
       await collection.insertOne(newUser);
       delete newUser.password;
       return newUser;
-
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
@@ -36,10 +35,9 @@ export default class AuthRepository {
   // Find a user by email
   async findByEmail(email) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. find user by mail
+      // find user by mail
       const isUserFound = await collection.findOne({ email });
 
       return isUserFound;
@@ -51,14 +49,14 @@ export default class AuthRepository {
   // set OTP in database Document
   async setOTP(email, otp, otpExpiry) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. set OTP in the db
-      await collection.updateOne(
+      // set OTP in the db
+      const result = await collection.updateOne(
         { email: email },
         { $set: { otp, otpExpiry } }
       );
+      return result.modifiedCount;
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
@@ -67,27 +65,24 @@ export default class AuthRepository {
   // clear OTP from database Document
   async clearOTP(email) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
-
-      // step 2. clear OTP from DB
+      // clear OTP from DB
 
       await collection.updateOne(
         { email: email },
-        { $unset: { otp: "", otpExpiry: "" } }
+        { $unset: { otp: 1, otpExpiry: 1 } }
       );
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
   }
 
-  // Update password after OTP verified 
+  // Update password after OTP verified
   async updatePassword(email, newPassword) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. update password
+      // update password
 
       return await collection.updateOne(
         { email },
@@ -101,15 +96,14 @@ export default class AuthRepository {
     }
   }
 
-  // add refresh token 
+  // add refresh token
   async addRefreshToken(userId, refreshToken) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. add token
+      // add token
       const result = await collection.updateOne(
-        { _id: userId },
+        { _id: new ObjectId(userId) },
         { $push: { refreshTokens: refreshToken } }
       );
       return result;
@@ -118,13 +112,12 @@ export default class AuthRepository {
     }
   }
 
-  // remove refresh token from database 
+  // remove refresh token from database
   async removeRefreshToken(userId, refreshToken) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. remove token from DB
+      // remove token from DB
       await collection.updateOne(
         { _id: new ObjectId(userId) },
         { $pull: { refreshTokens: refreshToken } }
@@ -136,10 +129,9 @@ export default class AuthRepository {
 
   async removeAllRefreshToken(userId) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. remove all tokens from DB
+      // remove all tokens from DB
       await collection.updateOne(
         { _id: new ObjectId(userId) },
         { $set: { refreshTokens: [] } }
@@ -151,10 +143,9 @@ export default class AuthRepository {
 
   async findByRefreshToken(refreshToken) {
     try {
-      // step 1. get collection
       const collection = this.getCollection();
 
-      // step 2. find by token
+      // find by token
       return await collection.findOne({ refreshTokens: refreshToken });
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
