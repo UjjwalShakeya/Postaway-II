@@ -30,6 +30,7 @@ export default class LikeController {
         message: `All likes have been retrieved `,
         data: allLikes, // standardize key as `data`
       });
+      
     } catch (err) {
       next(err); // passes to errorHandler middleware
     }

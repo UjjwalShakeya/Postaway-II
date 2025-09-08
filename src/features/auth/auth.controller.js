@@ -1,12 +1,13 @@
 // importing important modules
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
-import nodemailer from "nodemailer";
 
 import AuthModel from "./auth.model.js";
 import AuthRepository from "./auth.respository.js";
 import ApplicationError from "../../../utils/ApplicationError.js";
+
+// Utils
+import { sendEmail } from "../../../services/email.service.js";
 
 // jwt secret from from dot env
 const jwtSecret = process.env.JWT_SECRET;
@@ -37,23 +38,8 @@ export default class AuthController {
 
       const result = await this.authRepository.signUp(user);
 
-      // Optional: Auto-login after signup
-      const token = jwt.sign(
-        { userID: result._id, email: result.email },
-        jwtSecret,
-        { expiresIn: "1h" }
-      );
-
-      const refreshToken = jwt.sign(
-        {
-          userID: result._id,
-          email: result.email,
-        },
-        jwtSecret,
-        {
-          expiresIn: "7d",
-        }
-      );
+      const { accessToken, refreshToken, expiresIn } =
+        this.generateTokens(result);
 
       await this.authRepository.addRefreshToken(result._id, refreshToken);
 
@@ -65,9 +51,9 @@ export default class AuthController {
           gender: result.gender,
           email: result.email,
         },
-        token,
+        accessToken,
         refreshToken,
-        expiresIn: "1h",
+        expiresIn,
       });
     } catch (err) {
       next(err);
@@ -94,30 +80,16 @@ export default class AuthController {
         throw new ApplicationError("Invalid Credentials", 401);
       }
 
-      const token = jwt.sign(
-        { userID: user._id, email: user.email },
-        jwtSecret,
-        { expiresIn: "1h" }
-      );
-
-      const refreshToken = jwt.sign(
-        {
-          userID: user._id,
-          email: user.email,
-        },
-        jwtSecret,
-        {
-          expiresIn: "7d",
-        }
-      );
+      const { accessToken, refreshToken, expiresIn } =
+        this.generateTokens(user);
 
       await this.authRepository.addRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({
         message: "Login successful",
-        token,
+        accessToken,
         refreshToken,
-        expiresIn: "1h",
+        expiresIn,
       });
     } catch (err) {
       next(err);
@@ -190,84 +162,32 @@ export default class AuthController {
 
   async sendOTPEmail(email, otp) {
     try {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Your OTP Code",
-        html: `Your OTP code is: ${otp}. It is valid for 10 minutes.`,
-      });
-      return true;
+      await sendEmail(
+        email,
+        otp,
+        `Your OTP code is: ${otp}. It is valid for 10 minutes.`
+      );
     } catch (err) {
       console.error("Error sending OTP email:", err);
       throw new ApplicationError("Failed to send OTP email", 400);
     }
   }
+  
+  generateTokens(user) {
+    const accessToken = jwt.sign(
+      { userID: user._id, email: user.email },
+      jwtSecret,
+      { expiresIn: "1h" }
+    );
 
-  // async ForgetPassword(req, res, next) {
-  //   try {
-  //     const { email } = req.body;
+    const refreshToken = jwt.sign(
+      { userID: user._id, email: user.email },
+      jwtSecret,
+      { expiresIn: "7d" }
+    );
 
-  //     // checking first whether user is exist in the db or not
-  //     const user = await this.authRepository.findByEmail(email);
-
-  //     if (!user) {
-  //       throw new ApplicationError("user not found", 400);
-  //     }
-
-  //     const resetToken = crypto.randomBytes(32).toString("hex");
-  //     const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // expires in 15 min
-
-  //     await this.authRepository.setResetToken(
-  //       user.email,
-  //       resetToken,
-  //       resetTokenExpiry
-  //     );
-
-  //
-  //     return res
-  //       .status(200)
-  //       .json({ message: "Password reset link sent to email" });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // }
-
-  // Reset with token
-  // async ResetPasswordWithToken(req, res, next) {
-  //   try {
-  //     const { token } = req.params;
-  //     const { newPassword } = req.body;
-
-  //     // validate inputs
-  //     if (!newPassword) {
-  //       throw new ApplicationError("New password is required", 400);
-  //     }
-
-  //     // find user by token
-  //     const user = await this.authRepository.findByResetToken(token);
-  //     console.log(user);
-  //     if (!user) {
-  //       throw new ApplicationError("Token is invalid or expired", 400);
-  //     }
-
-  //     // hash password
-  //     const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-  //     await this.authRepository.updatePasswordWithToken(token, hashedPassword);
-
-  //     return res.status(200).json({ message: "Password reset successful" });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // }
+    return { accessToken, refreshToken, expiresIn: "1h" };
+  }
 
   // logout
   async Logout(req, res, next) {

@@ -19,44 +19,46 @@ const authRouter = express.Router();
 /**
  * Route: POST /signup
  * Purpose: Register a new user
- * Middlewares: validateUser → ensures request body has required fields
+ * Middleware: validateUser → ensures body has required fields
  */
+
 authRouter.post("/signup", validateUser, (req, res, next) =>
   authControllerInc.SignUp(req, res, next)
 );
 
 /**
  * Route: POST /signin
- * Purpose: Authenticate a user and issue tokens
+ * Purpose: User login
  */
 authRouter.post("/signin", (req, res, next) =>
   authControllerInc.SignIn(req, res, next)
 );
 
 /**
- * Route: POST /forget-password
- * Purpose: Send reset password link via email
+ * Route: POST /otp/send
+ * Purpose: Send OTP to user
  */
 
 authRouter.post("/otp/send", (req, res, next) => {
   authControllerInc.SendOTP(req, res, next);
 });
 
+/**
+ * Route: POST /otp/verify
+ * Purpose: Verify user OTP
+ */
 authRouter.post("/otp/verify", (req, res, next) => {
   authControllerInc.VerifyOTP(req, res, next);
 });
+
+/**
+ * Route: POST /otp/reset-password
+ * Purpose: Reset password using OTP
+ */
 authRouter.post("/otp/reset-password", (req, res, next) => {
   authControllerInc.ResetPasswordWithOTP(req, res, next);
 });
 
-
-/**
- * Route: POST /reset-password/:token
- * Purpose: Reset password using emailed token
- */
-// authRouter.post("/reset-password/:token", (req, res, next) => {
-//   authControllerInc.ResetPasswordWithToken(req, res, next);
-// });
 
 /**
  * Route: POST /logout
