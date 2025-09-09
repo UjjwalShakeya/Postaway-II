@@ -94,7 +94,7 @@ export default class AuthController {
     }
   }
 
-  SendOTP = async(req, res, next)=> {
+  SendOTP = async (req, res, next)=> {
     try {
       const { email } = req.body;
       // checking first whether user is exist in the db or not
@@ -104,9 +104,6 @@ export default class AuthController {
       // generating OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
-
-      console.log("otp", otp);
-      console.log("otpExpiry", otpExpiry);
 
       // set OTP to database
       await this.authRepository.setOTP(email, otp, otpExpiry);
