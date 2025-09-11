@@ -4,10 +4,10 @@
 import express from "express";
 
 // local imports
-import FriendshipController from "./friendship.controller";
+import FriendshipController from "./friendship.controller.js";
 
 // Middlewares
-import jwtAuth from "../../middlewares/jwt.middleware";
+import jwtAuth from "../../middlewares/jwt.middleware.js";
 
 // creating instance
 const friendsRouter = express.Router();

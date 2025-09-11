@@ -1,44 +1,67 @@
-import FriendshipRepository from "./friendship.repository";
+// Repository
+import FriendshipRepository from "./friendship.repository.js";
+import UserRepository from "../user/user.repository.js";
+import { ObjectId } from "mongodb";
 
-export default class FriendshipController{
-    constructor() {
-        this.friendshipRepository = new FriendshipRepository();
+// Middlewares
+import ApplicationError from "../../middlewares/errorHandler.middleware.js";
+
+export default class FriendshipController {
+  constructor() {
+    this.friendshipRepository = new FriendshipRepository();
+    this.userRepository = new UserRepository();
+  }
+
+  getFriendsByUserId = async (req, res, next) => {
+    try {
+      // logic to get friends
+    } catch (err) {
+      next(err);
     }
+  };
 
-    getFriendsByUserId = async (req,res,next) =>{
-         try {
-            // logic to get friends
-
-        } catch (err) {
-            next(err);
-        }
+  getPendingRequests = async (req, res, next) => {
+    try {
+      // logic to get pending requests
+    } catch (err) {
+      next(err);
     }
+  };
 
-    getPendingRequests = async (req, res, next) => {
-        try {
-            // logic to get pending requests
+  toggleFriendship = async (req, res, next) => {
+    try {
+      // logic to toggle friendship
+      const userId = new ObjectId(req.userID);
 
-        } catch (err) {
-            next(err);
-        }
+      const friendId = new ObjectId(req.params.friendId);
+
+      if (userId.equals(friendId)) {
+        throw new ApplicationError("You cannot be friends with yourself", 400);
+      }
+
+      const friend = await this.userRepository.getUser(friendId);
+      if (!friend) throw new ApplicationError("Friend not found", 404);
+
+      const result = await this.friendshipRepository.toggleFriendship(
+        userId,
+        friendId
+      );
+
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        data: result.data,
+      });
+    } catch (err) {
+      next(err);
     }
+  };
 
-    toggleFriendship = async (req, res, next) => {
-        try {
-            // logic to toggle friendship
-
-        } catch (err) {
-            next(err);
-        }
-
+  responseToRequest = async (req, res, next) => {
+    try {
+      // logic to respond to a friend request
+    } catch (err) {
+      next(err);
     }
-
-    responseToRequest = async (req, res, next) => {
-        try {
-            // logic to respond to a friend request
-
-        } catch (err) {
-            next(err);
-        }
-    }
+  };
 }

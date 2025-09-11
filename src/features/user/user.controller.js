@@ -1,5 +1,10 @@
+// importing importand required modules
+
 import ApplicationError from "../../../utils/ApplicationError.js";
+
+// repositories
 import UserRepository from "./user.repository.js";
+
 
 export default class UserController {
   constructor() {
