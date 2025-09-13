@@ -21,10 +21,18 @@ export default class FriendshipRepository {
     } catch (err) {}
   };
 
-  getPendingRequests = async () => {
+  getPendingRequests = async (userId) => {
     try {
       // write you code down here
-    } catch (err) {}
+      const collection = await this.getCollection();
+
+      const result = await collection
+        .find({ friendId: userId, status: { $in: ["pending"] } })
+        .toArray();
+        return result;
+    } catch (err) {
+      throw err;
+    }
   };
 
   toggleFriendship = async (userId, friendId) => {

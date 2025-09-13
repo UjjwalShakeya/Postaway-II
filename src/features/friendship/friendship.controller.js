@@ -23,6 +23,18 @@ export default class FriendshipController {
   getPendingRequests = async (req, res, next) => {
     try {
       // logic to get pending requests
+      const userId = new ObjectId(req.userID);
+      const pendingRequests =
+        await this.friendshipRepository.getPendingRequests(userId);
+
+      res.status(200).json({
+        success: true,
+        message:
+          pendingRequests.length == 0
+            ? "no pending friends requests"
+            : "friend requests retrieved succesfully ",
+        data: pendingRequests,
+      });
     } catch (err) {
       next(err);
     }
