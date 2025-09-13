@@ -68,8 +68,8 @@ export default class FriendshipRepository {
           message: "Friend removed",
           data: existingFriendship,
         };
-      };
-      
+      }
+
       return {
         message: "No action taken",
         data: existingFriendship,
@@ -79,9 +79,57 @@ export default class FriendshipRepository {
     }
   };
 
-  responseToRequest = async () => {
+  responseToRequest = async (userId, friendId, action) => {
     try {
       // write you code down here
-    } catch (err) {}
+      const collection = await this.getCollection();
+      const existingFriendship = await collection.findOne({
+        $or: [
+          { userId: userId, friendId: friendId },
+          { userId: friendId, friendId: userId },
+        ],
+      });
+
+      if (!existingFriendship) {
+        return {
+          message: "no friendship request between this friend and user",
+          data: null,
+        };
+      }
+
+      // Case 2: Accept → update status to accepted
+      if (existingFriendship.status === "pending" && action === "accept") {
+        const result = await collection.updateOne(
+          {
+            _id: existingFriendship._id,
+          },
+          {
+            $set: {
+              status: "accepted",
+              updatedAt: new Date(),
+            },
+          }
+        );
+        return result;
+      }
+
+      // Case 3: Reject → delete the friendship
+      if (existingFriendship.status === "pending" && action === "reject") {
+        await collection.deleteOne({
+          _id: existingFriendship._id,
+        });
+        return {
+          message: "request rejected",
+          data: existingFriendship,
+        };
+      }
+
+      return {
+        message: "No action taken",
+        data: existingFriendship,
+      };
+    } catch (err) {
+      throw err;
+    }
   };
 }

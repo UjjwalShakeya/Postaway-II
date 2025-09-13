@@ -60,6 +60,33 @@ export default class FriendshipController {
   responseToRequest = async (req, res, next) => {
     try {
       // logic to respond to a friend request
+      const userId = new ObjectId(req.userID);
+      const friendId = new ObjectId(req.params.friendId);
+      const { action } = req.body; // accept || or reject
+
+      // Validate action
+      if (!["accept", "reject"].includes(action?.toLowerCase())) {
+        throw new ApplicationError(
+          "Invalid action. Use: 'accept' or 'reject'",
+          400
+        );
+      }
+
+      const friend = await this.userRepository.getUser(friendId);
+      if (!friend) throw new ApplicationError("Friend not found", 404);
+
+      // Process request
+      const result = await this.friendshipRepository.responseToRequest(
+        userId,
+        friendId,
+        action.toLowerCase()
+      );
+
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        data: result.data,
+      });
     } catch (err) {
       next(err);
     }
