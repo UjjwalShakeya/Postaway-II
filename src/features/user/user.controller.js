@@ -5,13 +5,12 @@ import ApplicationError from "../../../utils/ApplicationError.js";
 // repositories
 import UserRepository from "./user.repository.js";
 
-
 export default class UserController {
   constructor() {
     this.userRepository = new UserRepository();
   }
 
-  async getUser(req, res, next) {
+  getUser = async (req, res, next) => {
     try {
       const userId = req.params.userId;
 
@@ -29,8 +28,8 @@ export default class UserController {
     } catch (err) {
       next(err);
     }
-  }
-  async getAllUsers(req, res, next) {
+  };
+  getAllUsers = async (req, res, next) => {
     try {
       const users = await this.userRepository.getAllUsers();
 
@@ -41,9 +40,9 @@ export default class UserController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-  async updateUserById(req, res, next) {
+  updateUserById = async(req, res, next)=> {
     try {
       const userId = req.params.userId;
       const name = req.body.name;
