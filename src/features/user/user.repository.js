@@ -9,13 +9,14 @@ export default class UserRepository {
     this.collection = "users";
   }
 
+  getCollection() {
+    const db = getDB();
+    return db.collection(this.collection);
+  }
+
   async getUser(userId) {
     try {
-      // step1. getting dbs
-      const db = getDB();
-
-      // step2. getting the collection
-      const collection = db.collection(this.collection);
+      const collection = this.getCollection();
 
       const user = await collection.findOne(
         { _id: new ObjectId(userId) },
@@ -29,11 +30,7 @@ export default class UserRepository {
 
   async getAllUsers() {
     try {
-      // step1. getting dbs
-      const db = getDB();
-
-      // step2. getting the collection
-      const collection = db.collection(this.collection);
+      const collection = this.getCollection();
 
       const allUsers = await collection
         .find({}, { projection: { name: 1 } })
@@ -47,21 +44,14 @@ export default class UserRepository {
 
   async updateUserById(userId, data) {
     try {
-      // step1. getting dbs
-      const db = getDB();
-
-      // step2. getting the collection
-      const collection = db.collection(this.collection);
+      const collection = this.getCollection();
 
       const updatedUser = await collection.findOneAndUpdate(
         { _id: new ObjectId(userId) },
         { $set: data },
-        {returnDocument:"after",
-          projection: { name: 1, gender:1,}
-        }
+        { returnDocument: "after", projection: { name: 1, gender: 1 } }
       );
       return updatedUser;
-      
     } catch (err) {
       throw new ApplicationError("Something went wrong with database", 500);
     }
