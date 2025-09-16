@@ -15,6 +15,20 @@ export default class FriendshipController {
   getFriendsByUserId = async (req, res, next) => {
     try {
       // logic to get friends
+      // logic to get pending requests
+      const userId = new ObjectId(req.params.userId);
+      
+      const userFriends =
+        await this.friendshipRepository.getFriendsByUserId(userId);
+
+      res.status(200).json({
+        success: true,
+        message:
+          userFriends.length == 0
+            ? "friends requests"
+            : "friends retrieved succesfully ",
+        data: userFriends,
+      });
     } catch (err) {
       next(err);
     }

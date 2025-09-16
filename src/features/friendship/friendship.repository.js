@@ -15,10 +15,18 @@ export default class FriendshipRepository {
     return db.collection(this.collection);
   };
 
-  getFriendsByUserId = async () => {
+  getFriendsByUserId = async (userId) => {
     try {
       // write you code down here
-    } catch (err) {}
+      const collection = await this.getCollection();
+
+      const firends = await collection
+        .find({ userId: userId,friendId:userId, status: { $in: ["accepted"] } })
+        .toArray();
+      return firends;
+    } catch (err) {
+      throw err;
+    }
   };
 
   getPendingRequests = async (userId) => {
@@ -29,7 +37,7 @@ export default class FriendshipRepository {
       const result = await collection
         .find({ friendId: userId, status: { $in: ["pending"] } })
         .toArray();
-        return result;
+      return result;
     } catch (err) {
       throw err;
     }

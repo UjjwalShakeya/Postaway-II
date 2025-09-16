@@ -28,22 +28,32 @@ export default class AuthRepository {
       delete newUser.password;
       return newUser;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      if (err.code === 11000) {
+        throw new ApplicationError("Email already exists", 409);
+      }
+      throw new ApplicationError("Database error in signUp", 500);
     }
   }
 
   // Find a user by email
   async findByEmail(email) {
-    try {
-      const collection = this.getCollection();
+    const collection = this.getCollection();
 
-      // find user by mail
-      const isUserFound = await collection.findOne({ email });
-
-      return isUserFound;
-    } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
-    }
+    // find user by mail
+    return await collection.findOne(
+      { email },
+      {
+        projection: {
+          password: 1,
+          name: 1,
+          email: 1,
+          gender: 1,
+          otp: 1,
+          otpExpiry: 1,
+          refreshTokens: 1,
+        },
+      }
+    );
   }
 
   // set OTP in database Document
@@ -142,13 +152,8 @@ export default class AuthRepository {
   }
 
   async findByRefreshToken(refreshToken) {
-    try {
-      const collection = this.getCollection();
-
-      // find by token
-      return await collection.findOne({ refreshTokens: refreshToken });
-    } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
-    }
+    const collection = this.getCollection();
+    // find by token
+    return await collection.findOne({ refreshTokens: refreshToken });
   }
 }

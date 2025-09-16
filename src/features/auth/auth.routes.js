@@ -31,6 +31,20 @@ authRouter.post("/signup", validateUser, authController.SignUp);
 authRouter.post("/signin", authController.SignIn);
 
 /**
+ * Route: POST /logout
+ * Purpose: Logout from current device (invalidate refresh token)
+ * Middleware: jwtAuth → ensures request has a valid access token
+ */
+authRouter.post("/logout", jwtAuth, authController.Logout);
+
+/**
+ * Route: POST /logout-all-devices
+ * Purpose: Logout from all devices (clear all refresh tokens)
+ * Middleware: jwtAuth → ensures request has a valid access token
+ */
+authRouter.post("/logout-all-devices", jwtAuth, authController.LogoutAll);
+
+/**
  * Route: POST /otp/send
  * Purpose: Send OTP to user
  */
@@ -48,19 +62,5 @@ authRouter.post("/otp/verify", authController.VerifyOTP);
  * Purpose: Reset password using OTP
  */
 authRouter.post("/otp/reset-password", authController.ResetPasswordWithOTP);
-
-/**
- * Route: POST /logout
- * Purpose: Logout from current device (invalidate refresh token)
- * Middleware: jwtAuth → ensures request has a valid access token
- */
-authRouter.post("/logout", jwtAuth, authController.Logout);
-
-/**
- * Route: POST /logout-all-devices
- * Purpose: Logout from all devices (clear all refresh tokens)
- * Middleware: jwtAuth → ensures request has a valid access token
- */
-authRouter.post("/logout-all-devices", jwtAuth, authController.LogoutAll);
 
 export default authRouter;

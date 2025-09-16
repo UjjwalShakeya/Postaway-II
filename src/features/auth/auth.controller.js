@@ -38,7 +38,8 @@ export default class AuthController {
 
       const result = await this.authRepository.signUp(user);
 
-      const { accessToken, refreshToken, expiresIn } = await this.generateTokens(result);
+      const { accessToken, refreshToken, expiresIn } =
+        await this.generateTokens(result);
 
       await this.authRepository.addRefreshToken(result._id, refreshToken);
 
@@ -64,37 +65,30 @@ export default class AuthController {
       const { email, password } = req.body;
 
       // checking email and password if any of them is missing then throw error
-      if (!email || !password) {
-        throw new ApplicationError("Email and password are required", 400);
-      }
+      if (!email || !password)
+        throw new ApplicationError("Email and password required", 400);
 
-      const user = await this.authRepository.findByEmail(email);
+      const user = await this.authRepository.findByEmail(email.toLowerCase());
+      if (!user) throw new ApplicationError("Invalid email or password", 401);
 
-      if (!user) {
-        // Don’t reveal whether email exists
-        throw new ApplicationError("user not found", 404);
-      }
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        throw new ApplicationError("Invalid Credentials", 401);
-      }
+      if (!isMatch)
+        throw new ApplicationError("Invalid email or password", 401);
 
-      const { accessToken, refreshToken, expiresIn } = await this.generateTokens(user);
-
+      const { accessToken, refreshToken, expiresIn } =
+        await this.generateTokens(user);
       await this.authRepository.addRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({
         message: "Login successful",
-        accessToken,
-        refreshToken,
-        expiresIn,
+        data: { accessToken, refreshToken, expiresIn },
       });
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-  SendOTP = async (req, res, next)=> {
+  SendOTP = async (req, res, next) => {
     try {
       const { email } = req.body;
       // checking first whether user is exist in the db or not
@@ -114,9 +108,9 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-   VerifyOTP = async(req, res, next) => {
+  VerifyOTP = async (req, res, next) => {
     try {
       const { email, otp } = req.body;
 
@@ -132,9 +126,9 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-   ResetPasswordWithOTP = async(req, res, next)=> {
+  ResetPasswordWithOTP = async (req, res, next) => {
     try {
       const { email, newPassword } = req.body;
 
@@ -153,9 +147,9 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 
-   sendOTPEmail = async(email, otp) =>{
+  sendOTPEmail = async (email, otp) => {
     try {
       await sendEmail(
         email,
@@ -166,9 +160,9 @@ export default class AuthController {
       console.error("Error sending OTP email:", err);
       throw new ApplicationError("Failed to send OTP email", 400);
     }
-  }
+  };
 
-  generateTokens = async(user) => {
+  generateTokens = async (user) => {
     const accessToken = jwt.sign(
       { userID: user._id, email: user.email },
       jwtSecret,
@@ -182,30 +176,26 @@ export default class AuthController {
     );
 
     return { accessToken, refreshToken, expiresIn: "1h" };
-  }
+  };
 
   // logout
-   Logout = async(req, res, next)=> {
+  Logout = async (req, res, next) => {
     try {
       const { refreshToken } = req.body;
-
       const user = await this.authRepository.findByRefreshToken(refreshToken);
-
       // user not found
-      if (!user) {
-        throw new ApplicationError("Invalid refresh token", 400);
-      }
-
+      if (!user) throw new ApplicationError("Invalid refresh token", 400);
+      
       await this.authRepository.removeRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       next(err);
     }
-  }
+  };
 
   // logout all
-   LogoutAll = async(req, res, next) => {
+  LogoutAll = async (req, res, next) => {
     try {
       const userId = req.userID;
 
@@ -219,5 +209,5 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
+  };
 }
