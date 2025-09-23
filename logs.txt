@@ -1,0 +1,9 @@
+[2025-09-16T19:54:50.704Z] info: GET /api/users/get-details/68c5b02eae905991fb1e7bf3 Request Body Is Empty
+[2025-09-16T19:55:03.808Z] info: GET /api/users/get-details/68c5b05dae905991fb1e7bf4 Request Body Is Empty
+[2025-09-16T19:55:13.856Z] info: GET /api/users/get-details/68c5b080ae905991fb1e7bf5 Request Body Is Empty
+[2025-09-16T19:55:20.954Z] info: GET /api/users/get-details/68c98e4da36456554a21220f Request Body Is Empty
+[2025-09-16T19:55:58.823Z] info: GET /api/users/get-all-details?page=2&limit=10 Request Body Is Empty
+[2025-09-16T19:56:26.816Z] info: GET /api/users/get-details/68c5b05dae905991fb1e7bf4 Request Body Is Empty
+[2025-09-16T19:56:39.066Z] info: PUT /api/users/update-details/68c5b05dae905991fb1e7bf4 {"gender":"female"}
+[2025-09-16T19:56:55.089Z] info: PUT /api/users/update-details/68c5b05dae905991fb1e7bf4 {"gender":"female"}
+[2025-09-16T19:57:06.529Z] info: PUT /api/users/update-details/68c5b05dae905991fb1e7bf4 {"gender":"female"}

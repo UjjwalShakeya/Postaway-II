@@ -1,47 +1,52 @@
-// importing important modules
+// User Repository
 
-import ApplicationError from "../../../utils/ApplicationError.js";
+// Import required packages :-
+// Application modules
 import { getDB } from "../../config/mongodb.js";
 import { ObjectId, ReturnDocument } from "mongodb";
 
+// User Repository class
 export default class UserRepository {
+  // Initialize collection
   constructor() {
     this.collection = "users";
   }
-
+  // method to get collection
   getCollection() {
     const db = getDB();
     return db.collection(this.collection);
   }
 
+  // <<< Get user by ID (no passwords) >>>
   async getUser(userId) {
     try {
       const collection = this.getCollection();
 
       const user = await collection.findOne(
         { _id: new ObjectId(userId) },
-        { projection: { name: 1 } }
+        { projection: { _id: 1, name: 1, gender: 1, email: 1 } }
       );
       return user;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err;
     }
   }
-
+  // <<< Get all users (no passwords) >>>
   async getAllUsers() {
     try {
       const collection = this.getCollection();
 
       const allUsers = await collection
-        .find({}, { projection: { name: 1 } })
+        .find({}, { projection: { _id: 1, name: 1, gender: 1, email: 1 } })
         .toArray();
 
       return allUsers;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err;
     }
   }
 
+  // <<< Update user by ID (no passwords) >>>
   async updateUserById(userId, data) {
     try {
       const collection = this.getCollection();
@@ -49,11 +54,14 @@ export default class UserRepository {
       const updatedUser = await collection.findOneAndUpdate(
         { _id: new ObjectId(userId) },
         { $set: data },
-        { returnDocument: "after", projection: { name: 1, gender: 1 } }
+        {
+          returnDocument: "after",
+          projection: { _id: 1, name: 1, gender: 1, email: 1 },
+        }
       );
-      return updatedUser;
+      return updatedUser.value;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err;
     }
   }
 }

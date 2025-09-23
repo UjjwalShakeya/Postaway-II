@@ -1,15 +1,17 @@
-// importing importand required modules
+// User Controller
 
+// Import required packages :-
+// Application modules
+import UserRepository from "./user.repository.js";
 import ApplicationError from "../../../utils/ApplicationError.js";
 
-// repositories
-import UserRepository from "./user.repository.js";
-
+// User Controller class
 export default class UserController {
+  // Initialize repository
   constructor() {
     this.userRepository = new UserRepository();
   }
-
+  // <<< Get user details by ID (no passwords) >>>
   getUser = async (req, res, next) => {
     try {
       const userId = req.params.userId;
@@ -21,6 +23,9 @@ export default class UserController {
 
       const user = await this.userRepository.getUser(userId);
 
+      if (!user) {
+        throw new ApplicationError("User not found", 404);
+      }
       return res.status(200).json({
         message: "user details retrieved successfully",
         user,
@@ -29,10 +34,16 @@ export default class UserController {
       next(err);
     }
   };
+
+  // <<< Get all user details (no passwords) >>>
   getAllUsers = async (req, res, next) => {
     try {
       const users = await this.userRepository.getAllUsers();
 
+      if (!users || users.length === 0) {
+        throw new ApplicationError("No users found", 404);
+      };
+      
       return res.status(200).json({
         message: "all users details retrieved successfully",
         users,
@@ -42,7 +53,8 @@ export default class UserController {
     }
   };
 
-  updateUserById = async(req, res, next)=> {
+  // <<< Update user details (no passwords) >>>
+  updateUserById = async (req, res, next) => {
     try {
       const userId = req.params.userId;
       const name = req.body.name;
@@ -97,5 +109,5 @@ export default class UserController {
     } catch (err) {
       next(err);
     }
-  }
-}
+  };
+};
