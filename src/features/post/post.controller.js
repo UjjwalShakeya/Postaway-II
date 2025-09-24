@@ -7,6 +7,7 @@ import PostModel from "./post.model.js";
 import PostRepository from "./post.respository.js";
 
 export default class PostController {
+  
   constructor() {
     this.postRepository = new PostRepository();
   }

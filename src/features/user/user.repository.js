@@ -15,7 +15,7 @@ export default class UserRepository {
   getCollection() {
     const db = getDB();
     return db.collection(this.collection);
-  }
+  };
 
   // <<< Get user by ID (no passwords) >>>
   async getUser(userId) {

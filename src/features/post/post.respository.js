@@ -1,32 +1,40 @@
+// Post Repository
+
+// Import required packages :-
+// Application modules
 import ApplicationError from "../../../utils/ApplicationError.js";
 import { getDB } from "../../config/mongodb.js";
 import { ObjectId } from "mongodb";
 
+// Post Repository class
 export default class PostRepository {
+    // Initialize collection
   constructor() {
     this.collection = "posts";
-  }
+  };
+  // method to get collection
+  getCollection(){
+    const db = getDB();
+    return db.collection(this.collection);
+  };
 
+// Create a new post
   async createPost(newPost) {
     try {
-      // getting db access
-      const db = getDB();
-
-      // getting collection access
-      const collection = db.collection(this.collection);
+      // getting collection
+      const collection = this.getCollection();
 
       await collection.insertOne(newPost);
-
       return newPost;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err
     }
-  }
-
+  };
+ // Retrieve all posts with optional caption filter and pagination
   async getAllPosts(page, limit, caption) {
     try {
-      const db = getDB();
-      const collection = db.collection(this.collection);
+      // getting collection
+      const collection = this.getCollection();
 
       // Convert to numbers safely
       const pageNum = Math.max(1, parseInt(page, 10) || 1);
@@ -57,16 +65,17 @@ export default class PostRepository {
         currentPage: pageNum,
       };
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err
     }
-  }
+  };
+
+  // Retrieve a single post by ID
   async getPostById(postId) {
     try {
-      // 1. getting db
-      const db = getDB();
-      // 2. getting collection
-      const collection = db.collection(this.collection);
-      // 3. find post by id
+      // getting collection
+      const collection = this.getCollection();
+
+      // find post by id
       // Aggregation pipeline
       const pipeline = [
         {
@@ -82,19 +91,18 @@ export default class PostRepository {
 
       const results = await collection.aggregate(pipeline).toArray();
 
-      return results;
+      return results[0] || null;
+
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err
     }
   }
 
+  // Retrieve all posts for a specific user
   async getPostsByUserCred(userId) {
     try {
-      // 1. getting db
-      const db = getDB();
-
-      // 2. getting collection
-      const collection = db.collection(this.collection);
+      // getting collection
+      const collection = this.getCollection();
 
       // Aggregation pipeline
       const pipeline = [
@@ -108,16 +116,15 @@ export default class PostRepository {
 
       return await collection.aggregate(pipeline).toArray();
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err
     }
-  }
+  };
+
+  // Delete a post by ID for a specific user
   async deletePost(postID, userID) {
     try {
-      // getting database
-      const db = getDB();
-
       // getting collection
-      const collection = db.collection(this.collection);
+      const collection = this.getCollection();
 
       const result = await collection.deleteOne({
         _id: new ObjectId(postID),
@@ -129,16 +136,14 @@ export default class PostRepository {
 
       return result;
     } catch (err) {
-      throw new ApplicationError("Something went wrong with database", 500);
+      throw err
     }
   }
+  // Update a post by ID for a specific user
   async updatePost(userID, postID, data) {
     try {
-      //1.  getting db
-      const db = getDB();
-
-      // 2. getting collection
-      const collection = db.collection(this.collection);
+      // getting collection
+      const collection = this.getCollection();
 
       const updatedUser = await collection.findOneAndUpdate(
         { _id: new ObjectId(postID), userId: userID },
@@ -149,7 +154,7 @@ export default class PostRepository {
       return updatedUser;
 
     } catch (err) {
-      throw new ApplicationError("Error fetching post: " + err.message, 500);
+      throw err
     }
   }
 }
