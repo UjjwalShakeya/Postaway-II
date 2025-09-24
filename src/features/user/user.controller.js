@@ -27,6 +27,7 @@ export default class UserController {
         throw new ApplicationError("User not found", 404);
       }
       return res.status(200).json({
+        success:true,
         message: "user details retrieved successfully",
         user,
       });
@@ -45,6 +46,7 @@ export default class UserController {
       };
       
       return res.status(200).json({
+        success:true,
         message: "all users details retrieved successfully",
         users,
       });
@@ -103,6 +105,7 @@ export default class UserController {
         throw new ApplicationError("User not found or not updated", 404);
       }
       return res.status(200).json({
+        success:true,
         message: "User details updated successfully",
         updatedUser,
       });
