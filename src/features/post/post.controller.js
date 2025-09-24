@@ -1,8 +1,10 @@
-// importing required modules
+// Post Controller
+
+// Import required packages :-
+// Application modules 
 import ApplicationError from "../../../utils/ApplicationError.js";
 import PostModel from "./post.model.js";
 import PostRepository from "./post.respository.js";
-
 
 export default class PostController {
   constructor() {
@@ -10,15 +12,14 @@ export default class PostController {
   }
 
   // created new post
-  async createPost(req, res, next) {
+  createPost = async (req, res, next)=> {
     try {
       const userID = req.userID;
       const { caption, status } = req.body;
 
-      if (!req.file) new ApplicationError("Image file is required", 400);
+      if (!req.file) throw new ApplicationError("Image file is required", 400);
 
-      if (!caption || caption.trim() === "")
-        throw new ApplicationError("Caption field is required", 400);
+      if (!caption?.trim()) throw new ApplicationError("Caption field is required", 400);
 
       // Allow only valid statuses
       const allowedStatuses = ["published", "draft"];
@@ -45,8 +46,8 @@ export default class PostController {
     }
   };
 
-  // // retrieve all posts
-  async getAllPosts(req, res, next) {
+   // retrieve all posts
+  getAllPosts = async(req, res, next)=> {
     try {
       const caption = req.query.caption || "";
       const page = parseInt(req.query.page) || 1;
@@ -73,7 +74,7 @@ export default class PostController {
   }
 
   // retrieve post by the id
-  async getPostById(req, res, next) {
+  getPostById=async(req, res, next)=> {
     try {
       const id = req.params.id;
 
@@ -93,7 +94,7 @@ export default class PostController {
   }
 
   // retrieve post by the user credentials
-  async getPostsByUserCred(req, res, next) {
+   getPostsByUserCred = async(req, res, next)=> {
     try {
       const userID = req.params.userId;
       if (!userID) throw new ApplicationError("User ID required", 400);
@@ -110,7 +111,7 @@ export default class PostController {
     }
   }
 
-  async deletePost(req, res, next) {
+   deletePost = async(req, res, next)=> {
     try {
 
       const postID = req.params.postId;
@@ -131,7 +132,7 @@ export default class PostController {
   }
 
   // update the specific post
-  async updatePost(req, res, next) {
+   updatePost = async(req, res, next)=> {
     try {
       const userID = req.userID;
       const postID = req.params.postId;
