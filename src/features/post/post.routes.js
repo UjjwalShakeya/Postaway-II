@@ -1,15 +1,16 @@
-//  importing required packages
+// Import required packages :-
+// Third-party packages
 import express from "express";
-// importing the jwt token
+
+// Application modules :-
 import jwtAuth from "../../middlewares/jwt.middleware.js";
+import PostController from "./post.controller.js";
+
 import upload from "../../middlewares/fileUpload.middleware.js";
 
-//  importing post controller
-import PostController from "./post.controller.js";
-const PostControllerInc = new PostController();
-
-// creating post router with express
+// Initialize router and controller :-
 const PostRouter = express.Router();
+const PostControllerInc = new PostController();
 
 // Retrieve all posts
 PostRouter.get("/all", (req, res, next) =>
