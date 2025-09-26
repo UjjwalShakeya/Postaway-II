@@ -3,7 +3,7 @@
 // Import required packages :-
 // Application modules
 import { getDB } from "../../config/mongodb.js";
-import { ObjectId, ReturnDocument } from "mongodb";
+import { ObjectId } from "mongodb";
 
 // User Repository class
 export default class UserRepository {
@@ -15,7 +15,7 @@ export default class UserRepository {
   getCollection() {
     const db = getDB();
     return db.collection(this.collection);
-  };
+  }
 
   // <<< Get user by ID (no passwords) >>>
   async getUser(userId) {

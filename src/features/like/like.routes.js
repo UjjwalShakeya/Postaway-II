@@ -1,20 +1,27 @@
-// importing required modules
+// Like routes
+
+// Import required packages :-
+
+// Third-party packages
 import express from "express";
-import LikeController from "./like.controller.js";
+
+// Application modules :-
 import jwtAuth from "../../middlewares/jwt.middleware.js";
+import LikeController from "./like.controller.js";
 
+// Initialize router and controller :-
 const LikeRouter = express.Router();
+const likeController = new LikeController();
 
-const LikeControllerInc = new LikeController();
+// Routes :-
 
-// adding like to an specific post
-LikeRouter.post("/toggle/:id", jwtAuth, (req, res, next) =>
-  LikeControllerInc.toggleLike(req, res, next)
-);
+// toggling a like to a Post
+// Purpose: toggling a like/deslike
+// Middleware: jwtAuth → ensures user is authenticated
+LikeRouter.post("/toggle/:id", jwtAuth, likeController.toggleLike);
 
-// // retrieve all likes
-LikeRouter.get("/:id", jwtAuth, (req, res, next) =>
-  LikeControllerInc.getAllLikes(req, res, next)
-);
+// Purpose: Retrieve all likes
+// Middleware: jwtAuth → ensures user is authenticated
+LikeRouter.get("/:id", jwtAuth, likeController.getAllLikes);
 
 export default LikeRouter;
