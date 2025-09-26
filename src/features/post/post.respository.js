@@ -13,7 +13,7 @@ export default class PostRepository {
     this.collection = "posts";
   };
   // method to get collection
-  getCollection(){
+  getCollection = ()=>{
     const db = getDB();
     return db.collection(this.collection);
   };
