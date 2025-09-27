@@ -1,17 +1,21 @@
-// importing required modules
+// Comment Controller
+
+// Import required packages :-
+// Application modules 
 import CommentModel from "../comment/comment.model.js";
 import ApplicationError from "../../../utils/ApplicationError.js";
 import PostRepository from "../post/post.respository.js";
 import CommentRepository from "./comment.repository.js";
 
+// Comment Controller class
 export default class CommentController {
   constructor() {
-    // this.commentRepository =
     this.postRepository = new PostRepository();
     this.commentRepository = new CommentRepository();
   }
 
-  async getAllPostComments(req, res, next) {
+  // <<< Get all comments for a specific post >>>
+  getAllPostComments = async (req, res, next) => {
     try {
       const postId = req.params.postId;
       const page = parseInt(req.query.page) || 1;
@@ -26,6 +30,7 @@ export default class CommentController {
         throw new ApplicationError("post not found", 404);
       }
 
+      // if post is in draft or in archived you can't comment
       if (postExists.status == "draft" || postExists.status == "archived") {
         throw new ApplicationError("not allowed to comment on this post", 400);
       }
@@ -35,6 +40,10 @@ export default class CommentController {
         page,
         limit
       );
+
+      if (!result.comments || result.comments.length === 0) {
+        throw new ApplicationError("No comments found for this post", 404);
+      }
 
       res.status(200).json({
         success: true,
@@ -51,7 +60,8 @@ export default class CommentController {
     }
   }
 
-  async createComment(req, res, next) {
+  // <<< Create a new comment for a specific post >>>
+  createComment = async (req, res, next) => {
     try {
       const postId = req.params.postId;
       const userId = req.userID;
@@ -70,8 +80,12 @@ export default class CommentController {
         throw new ApplicationError("Post not found", 404);
       }
 
-      const commentObj = new CommentModel(userId,postId, comment);
+      const commentObj = new CommentModel(userId, postId, comment);
       const newComment = await this.commentRepository.createComment(commentObj);
+
+      if (!newComment) {
+        throw new ApplicationError("error adding comment to post", 400);
+      }
 
       res.status(201).json({
         success: true,
@@ -83,7 +97,8 @@ export default class CommentController {
     }
   }
 
-  async deleteComment(req, res, next) {
+  // <<< delete a specific comment >>>
+  deleteComment = async (req, res, next) => {
     try {
       const commentId = req.params.commentId;
       const userID = req.userID;
@@ -93,6 +108,13 @@ export default class CommentController {
       }
 
       const deletedComment = await this.commentRepository.deleteComment(commentId, userID);
+
+      if (!deletedComment || deletedComment.deletedCount <= 0) {
+        throw new ApplicationError(
+          "Something went wrong while deleting comment",
+          400
+        );
+      };
 
       res.status(200).json({
         success: true,
@@ -104,7 +126,8 @@ export default class CommentController {
     }
   }
 
-  async updateComment(req, res, next) {
+  // <<< update a specific comment >>>
+  updateComment = async (req, res, next) => {
     try {
       const commentId = req.params.commentId;
       const { comment } = req.body;
@@ -121,8 +144,14 @@ export default class CommentController {
       const updatedComment = await this.commentRepository.updateComment(
         commentId,
         userId,
-        comment, 
+        comment,
       );
+      if (!updatedComment || updatedComment.deletedCount <= 0) {
+        throw new ApplicationError(
+          "Something went wrong updating comment",
+          500
+        );
+      }
 
       res.status(200).json({
         success: true,

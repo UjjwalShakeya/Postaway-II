@@ -16,12 +16,9 @@ export default class CommentRepository {
       const collection = db.collection(this.collection);
 
       // 3. creating comment
-      const newComment = await collection.insertOne(data);
-      if (!newComment) {
-        throw new ApplicationError("error adding comment to post", 400);
-      }
-
+      await collection.insertOne(data);
       return data;
+
     } catch (err) {
       throw new ApplicationError("Error creating a post: " + err.message, 500);
     }
@@ -40,10 +37,6 @@ export default class CommentRepository {
         .skip(skip)
         .limit(limit)
         .toArray();
-
-      if (!comments || comments.length === 0) {
-        throw new ApplicationError("No comments found for this post", 404);
-      }
 
       // Count total comments for pagination metadata
       const totalComments = await collection.countDocuments({ postId: postId });
@@ -69,18 +62,12 @@ export default class CommentRepository {
       // 2. getting collection
       const collection = db.collection(this.collection);
 
-      const deletedComment = await collection.deleteOne({
+      return await collection.deleteOne({
         _id: new ObjectId(id),
         userId: userId,
       });
 
-      if (!deletedComment || deletedComment.deletedCount <= 0) {
-        throw new ApplicationError(
-          "Something went wrong deleting comment",
-          500
-        );
-      }
-      return deletedComment;
+
     } catch (err) {
       throw new ApplicationError(
         "Error deleting comments: " + err.message,
@@ -97,20 +84,13 @@ export default class CommentRepository {
       // 2. getting collection
       const collection = db.collection(this.collection);
 
-      const updatedComment = await collection.updateOne(
+      return await collection.updateOne(
         {
           _id: new ObjectId(commentId),
           userId: userId,
         },
         { $set: {comment} }
       );
-      if (!updatedComment || updatedComment.deletedCount <= 0) {
-        throw new ApplicationError(
-          "Something went wrong updating comment",
-          500
-        );
-      }
-      
 
     } catch (err) {
       throw new ApplicationError(
