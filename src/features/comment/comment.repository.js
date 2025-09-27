@@ -1,44 +1,55 @@
-// importing important modules
+// Comment Repository
+
+// Import required packages :-
+// Application modules
 import { getDB } from "../../config/mongodb.js";
-import ApplicationError from "../../../utils/ApplicationError.js";
 import { ObjectId } from "mongodb";
 
+// Comment Repository class
 export default class CommentRepository {
+  // Initialize collection
   constructor() {
     this.collection = "comments";
   }
 
-  async createComment(data) {
-    try {
-      // 1. getting db
-      const db = getDB();
-      // 2. getting collection
-      const collection = db.collection(this.collection);
+  // method to get collection
+  getCollection = () => {
+    const db = getDB();
+    return db.collection(this.collection);
+  };
 
-      // 3. creating comment
+  // <<< create a freshly new comment >>>
+  createComment = async (data) => {
+    try {
+      // 1. getting collection
+      const collection = this.getCollection();
+
+      // 2. creating comment
       await collection.insertOne(data);
       return data;
 
     } catch (err) {
-      throw new ApplicationError("Error creating a post: " + err.message, 500);
+      throw err;
     }
   }
 
-  async getAllPostComments(postId, page, limit) {
+  // <<< getting comments of an specific post >>>
+  getAllPostComments = async (postId, page, limit) => {
     try {
-      // getting db
-      const db = getDB();
-      const collection = db.collection(this.collection);
+
+      // 1. getting collection
+      const collection = this.getCollection();
+
       const skip = (page - 1) * limit;
 
-      // Fetch comments with pagination
+      // 2. Fetch comments with pagination
       const comments = await collection
         .find({ postId: postId })
         .skip(skip)
         .limit(limit)
         .toArray();
 
-      // Count total comments for pagination metadata
+      // 3. Count total comments for pagination metadata
       const totalComments = await collection.countDocuments({ postId: postId });
       return {
         comments,
@@ -47,56 +58,42 @@ export default class CommentRepository {
         currentPage: page,
       };
     } catch (err) {
-      throw new ApplicationError(
-        "Error fetching comments: " + err.message,
-        500
-      );
+      throw err;
     }
   }
 
-  async deleteComment(id, userId) {
+  // <<< deleting specific comment of an specific user >>>
+  deleteComment = async (id, userId) => {
     try {
-      // 1. getting db
-      const db = getDB();
-
-      // 2. getting collection
-      const collection = db.collection(this.collection);
+      // 1. getting collection
+      const collection = this.getCollection();
 
       return await collection.deleteOne({
         _id: new ObjectId(id),
         userId: userId,
       });
 
-
     } catch (err) {
-      throw new ApplicationError(
-        "Error deleting comments: " + err.message,
-        500
-      );
+      throw err;
     }
   }
 
-  async updateComment(commentId, userId, comment) {
+  // <<< updating a specific comment of an specific post  >>>
+  updateComment = async (commentId, userId, comment) => {
     try {
-      // 1. getting db
-      const db = getDB();
-
-      // 2. getting collection
-      const collection = db.collection(this.collection);
+      // 1. getting collection
+      const collection = this.getCollection();
 
       return await collection.updateOne(
         {
           _id: new ObjectId(commentId),
           userId: userId,
         },
-        { $set: {comment} }
+        { $set: { comment } }
       );
 
     } catch (err) {
-      throw new ApplicationError(
-        "Error updating comment: " + err.message,
-        500
-      );
+      throw err;
     }
   }
 }
