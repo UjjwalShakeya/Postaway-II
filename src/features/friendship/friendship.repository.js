@@ -1,13 +1,19 @@
 // importing important modules
 import FriendshipModel from "./friendship.model.js";
-
 // Core imports
-import { ObjectId } from "mongodb";
 import { getDB } from "../../config/mongodb.js";
+import { ObjectId } from "mongodb";
+
 
 export default class FriendshipRepository {
   constructor() {
     this.collection = "friendships";
+  };
+
+  // helper functions to validate and conver id
+  validateAndConvertId(id, name = "ID") {
+    if (!ObjectId.isValid(id)) throw new Error(`${name} is invalid`);
+    return new ObjectId(id);
   }
 
   getCollection = async () => {
@@ -17,13 +23,21 @@ export default class FriendshipRepository {
 
   getFriendsByUserId = async (userId) => {
     try {
+      const userID = this.validateAndConvertId(userId, "User ID");
+
       // write you code down here
       const collection = await this.getCollection();
 
-      const firends = await collection
-        .find({ userId: userId,friendId:userId, status: { $in: ["accepted"] } })
-        .toArray();
-      return firends;
+      const requests = await collection.find({
+        status: { $in: ['accepted'] },
+        $or: [
+          { userId: userID },
+          { friendId: userID }
+        ]
+      }).toArray();
+
+      return requests;
+
     } catch (err) {
       throw err;
     }
@@ -31,12 +45,13 @@ export default class FriendshipRepository {
 
   getPendingRequests = async (userId) => {
     try {
-      // write you code down here
+      const userID = this.validateAndConvertId(userId, "User ID");
       const collection = await this.getCollection();
 
       const result = await collection
-        .find({ friendId: userId, status: { $in: ["pending"] } })
+        .find({ friendId: userID, status: { $in: ["pending"] } })
         .toArray();
+
       return result;
     } catch (err) {
       throw err;
@@ -45,44 +60,68 @@ export default class FriendshipRepository {
 
   toggleFriendship = async (userId, friendId) => {
     try {
-      // write you code down here
       // 1. getting db and collection
-      const collection = await this.getCollection(this.collection);
+      const collection = await this.getCollection();
+
+      const userID = this.validateAndConvertId(userId, "User ID");
+      const friendID = this.validateAndConvertId(friendId, "Friend ID");
 
       // Check if friendship already exists
       const existingFriendship = await collection.findOne({
         $or: [
-          { userId: userId, friendId: friendId },
-          { userId: friendId, friendId: userId },
+          { userId: userID, friendId: friendID },
+          { userId: friendID, friendId: userID },
         ],
       });
 
       // Case 1: No friendship → create
       if (!existingFriendship) {
-        const newFriendship = new FriendshipModel(userId, friendId, "pending");
+        const newFriendship = new FriendshipModel(userID, friendID, "pending");
         const result = await collection.insertOne(newFriendship);
-
         return {
           message: "Friendship request sent",
-          data: { ...newFriendship, _id: result.insertedId },
+          data: { _id: result.insertedId, ...newFriendship },
         };
-      }
+      };
+
+      // Case 2: unfriend or cancelled → pending
+      if (existingFriendship.status === "unfriend" || existingFriendship.status === "cancelled" || existingFriendship.status === "rejected") {
+        const result = await collection.findOneAndUpdate(
+          { _id: existingFriendship._id },
+          { $set: { status: "pending" } },
+          { returnDocument: "after" }
+        );
+        return {
+          message: "Friendship request sent",
+          data: result
+        };
+      };
+
+
 
       // Case 2: Pending → cancel request
       if (existingFriendship.status === "pending") {
-        await collection.deleteOne({ _id: existingFriendship._id });
+        const result = await collection.findOneAndUpdate({ _id: existingFriendship._id },
+          { $set: { status: "cancelled", updatedAt: new Date() } },
+          { returnDocument: "after" } // returns the updated document
+        );
+
         return {
           message: "Friendship request cancelled",
-          data: existingFriendship,
+          data: result,
         };
       }
 
       // Case 3: Accepted → unfriend
       if (existingFriendship.status === "accepted") {
-        await collection.deleteOne({ _id: existingFriendship._id });
+        const result = await collection.findOneAndUpdate(
+          { _id: existingFriendship._id },
+          { $set: { status: "unfriend", updatedAt: new Date() } },
+          { returnDocument: "after" } // returns the updated document
+        );
         return {
           message: "Friend removed",
-          data: existingFriendship,
+          data: result,
         };
       }
 
@@ -97,46 +136,43 @@ export default class FriendshipRepository {
 
   responseToRequest = async (userId, friendId, action) => {
     try {
+      const userID = this.validateAndConvertId(userId, "User ID");
+      const friendID = this.validateAndConvertId(friendId, "Friend ID");
+
       // write you code down here
       const collection = await this.getCollection();
       const existingFriendship = await collection.findOne({
         $or: [
-          { userId: userId, friendId: friendId },
-          { userId: friendId, friendId: userId },
+          { userId: userID, friendId: friendID },
+          { userId: friendID, friendId: userID },
         ],
       });
-
-      if (!existingFriendship) {
-        return {
-          message: "no friendship request between this friend and user",
-          data: null,
-        };
-      }
+      if (!existingFriendship) return null;
 
       // Case 2: Accept → update status to accepted
       if (existingFriendship.status === "pending" && action === "accept") {
-        const result = await collection.updateOne(
-          {
-            _id: existingFriendship._id,
-          },
-          {
-            $set: {
-              status: "accepted",
-              updatedAt: new Date(),
-            },
-          }
+        const result = await collection.findOneAndUpdate(
+          { _id: existingFriendship._id },
+          { $set: { status: "accepted", updatedAt: new Date() } },
+          { returnDocument: "after" }
         );
-        return result;
+        return {
+          message: "Friend request accepted",
+          data: result,
+        };
       }
 
-      // Case 3: Reject → delete the friendship
+      // Case 3: Reject → the friendship
       if (existingFriendship.status === "pending" && action === "reject") {
-        await collection.deleteOne({
-          _id: existingFriendship._id,
-        });
+        const result = await collection.findOneAndUpdate(
+          { _id: existingFriendship._id },
+          { $set: { status: "rejected", updatedAt: new Date() } },
+          { returnDocument: "after" } // returns the updated document
+        );
+
         return {
-          message: "request rejected",
-          data: existingFriendship,
+          message: "Friend request rejected",
+          data: result,
         };
       }
 
@@ -144,6 +180,7 @@ export default class FriendshipRepository {
         message: "No action taken",
         data: existingFriendship,
       };
+
     } catch (err) {
       throw err;
     }

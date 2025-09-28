@@ -1,10 +1,11 @@
 // Repository
 import FriendshipRepository from "./friendship.repository.js";
 import UserRepository from "../user/user.repository.js";
+
 import { ObjectId } from "mongodb";
 
 // Middlewares
-import ApplicationError from "../../middlewares/errorHandler.middleware.js";
+import ApplicationError from "../../../utils/ApplicationError.js";
 
 export default class FriendshipController {
   constructor() {
@@ -14,19 +15,14 @@ export default class FriendshipController {
 
   getFriendsByUserId = async (req, res, next) => {
     try {
-      // logic to get friends
-      // logic to get pending requests
-      const userId = new ObjectId(req.params.userId);
-      
+      const userId = req.params.userId;
+
       const userFriends =
         await this.friendshipRepository.getFriendsByUserId(userId);
 
       res.status(200).json({
         success: true,
-        message:
-          userFriends.length == 0
-            ? "friends requests"
-            : "friends retrieved succesfully ",
+        message: userFriends.length === 0 ? "no friends found" : "friends retrieved succesfully",
         data: userFriends,
       });
     } catch (err) {
@@ -37,7 +33,8 @@ export default class FriendshipController {
   getPendingRequests = async (req, res, next) => {
     try {
       // logic to get pending requests
-      const userId = new ObjectId(req.userID);
+      const userId = req.userID;
+
       const pendingRequests =
         await this.friendshipRepository.getPendingRequests(userId);
 
@@ -46,7 +43,7 @@ export default class FriendshipController {
         message:
           pendingRequests.length == 0
             ? "no pending friends requests"
-            : "friend requests retrieved succesfully ",
+            : "friend requests retrieved succesfully",
         data: pendingRequests,
       });
     } catch (err) {
@@ -58,11 +55,11 @@ export default class FriendshipController {
     try {
       // logic to toggle friendship
       const userId = new ObjectId(req.userID);
-
       const friendId = new ObjectId(req.params.friendId);
 
+      // checking the userID and freindId requests are valid in the mongodb
       if (userId.equals(friendId)) {
-        throw new ApplicationError("You cannot be friends with yourself", 400);
+        throw new ApplicationError("You cannot be friends with yourself", 403);
       }
 
       const friend = await this.userRepository.getUser(friendId);
@@ -86,8 +83,8 @@ export default class FriendshipController {
   responseToRequest = async (req, res, next) => {
     try {
       // logic to respond to a friend request
-      const userId = new ObjectId(req.userID);
-      const friendId = new ObjectId(req.params.friendId);
+      const userId = req.userID; // userId
+      const friendId = req.params.friendId; // freindId
       const { action } = req.body; // accept || or reject
 
       // Validate action
@@ -96,7 +93,7 @@ export default class FriendshipController {
           "Invalid action. Use: 'accept' or 'reject'",
           400
         );
-      }
+      };
 
       const friend = await this.userRepository.getUser(friendId);
       if (!friend) throw new ApplicationError("Friend not found", 404);
@@ -107,6 +104,10 @@ export default class FriendshipController {
         friendId,
         action.toLowerCase()
       );
+
+      if (!result) {
+        throw new ApplicationError("No pending request found", 404);
+      }
 
       res.status(200).json({
         success: true,
