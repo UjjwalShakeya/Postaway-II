@@ -25,6 +25,7 @@ export default class AuthRepository {
 
       // step 2. add new user in db
       await collection.insertOne(newUser);
+      
       delete newUser.password;
       return newUser;
     } catch (err) {

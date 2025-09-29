@@ -26,15 +26,17 @@ export default class AuthController {
         throw new ApplicationError("All fields are required", 400);
       }
 
+      if (!req.file) throw new ApplicationError("Avatar Image is required", 400);
+
       const existingUser = await this.authRepository.findByEmail(email);
 
       if (existingUser) {
         throw new ApplicationError("User already exists with this email", 409);
-      }
+      };
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new AuthModel(name, email, hashedPassword, gender);
+      const user = new AuthModel(name, email, hashedPassword, gender,req.file.filename);
 
       const result = await this.authRepository.signUp(user);
 
@@ -50,6 +52,7 @@ export default class AuthController {
           name: result.name,
           gender: result.gender,
           email: result.email,
+          avatar: result.avatar,
         },
         accessToken,
         refreshToken,
@@ -185,7 +188,7 @@ export default class AuthController {
       const user = await this.authRepository.findByRefreshToken(refreshToken);
       // user not found
       if (!user) throw new ApplicationError("Invalid refresh token", 400);
-      
+
       await this.authRepository.removeRefreshToken(user._id, refreshToken);
 
       return res.status(200).json({ message: "Logged out successfully" });

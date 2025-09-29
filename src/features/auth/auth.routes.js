@@ -6,6 +6,7 @@ import express from "express";
 // Middlewares
 import validateUser from "../../middlewares/validator.middleware.js";
 import jwtAuth from "../../middlewares/jwt.middleware.js";
+import upload from "../../middlewares/fileUpload.middleware.js";
 
 // Controller
 import AuthController from "./auth.controller.js";
@@ -22,7 +23,7 @@ const authRouter = express.Router();
  * Middleware: validateUser → ensures body has required fields
  */
 
-authRouter.post("/signup", validateUser, authController.SignUp);
+authRouter.post("/signup", upload.single("avatar"),validateUser,authController.SignUp);
 
 /**
  * Route: POST /signin
