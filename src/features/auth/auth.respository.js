@@ -21,13 +21,14 @@ export default class AuthRepository {
   signUp = async (newUser) => {
     try {
       // step 1. get collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // step 2. add new user in db
       await collection.insertOne(newUser);
 
       delete newUser.password;
       return newUser;
+
     } catch (err) {
       if (err.code === 11000) {
         throw new ApplicationError("Email already exists", 409);
@@ -38,7 +39,7 @@ export default class AuthRepository {
 
   // Find a user by email
   findByEmail = async (email) => {
-    const collection = this.getCollection();
+    const collection = await this.getCollection();
 
     // find user by mail
     return await collection.findOne(
@@ -62,7 +63,7 @@ export default class AuthRepository {
   // set OTP in database Document
   setOTP = async (email, otp, otpExpiry) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // set OTP in the db
       return await collection.updateOne(
@@ -76,7 +77,7 @@ export default class AuthRepository {
 
   setResetToken = async (email, resetToken, resetTokenExpiry) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
       return await collection.updateOne(
         { email },
         {
@@ -91,7 +92,7 @@ export default class AuthRepository {
   // clear OTP from database Document
   clearOTP = async (email) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
       // clear OTP from DB
 
       return await collection.updateOne(
@@ -106,7 +107,7 @@ export default class AuthRepository {
   // Update password after OTP verified
   updatePassword = async (email, newPassword) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // update password
 
@@ -125,7 +126,7 @@ export default class AuthRepository {
   // add refresh token
   addRefreshToken = async (userId, refreshToken) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // add token
       const result = await collection.updateOne(
@@ -141,7 +142,7 @@ export default class AuthRepository {
   // remove refresh token from database
   removeRefreshToken = async (userId, refreshToken) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // remove token from DB
       await collection.updateOne(
@@ -155,7 +156,7 @@ export default class AuthRepository {
 
   removeAllRefreshToken = async (userId) => {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // remove all tokens from DB
       await collection.updateOne(
@@ -170,7 +171,7 @@ export default class AuthRepository {
 
   async findByRefreshToken(refreshToken) {
     try {
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
       // find by token
       return await collection.findOne({ refreshTokens: refreshToken });
     } catch (err) {
