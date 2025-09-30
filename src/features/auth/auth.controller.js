@@ -1,6 +1,7 @@
 // importing important modules
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 import AuthModel from "./auth.model.js";
 import AuthRepository from "./auth.respository.js";
@@ -16,6 +17,36 @@ export default class AuthController {
   constructor() {
     this.authRepository = new AuthRepository();
   }
+
+  // helper functions
+  sendOTPEmail = async (email, otp) => {
+    try {
+      await sendEmail(
+        email,
+        otp,
+        `Your OTP code is: ${otp}. It is valid for 10 minutes.`
+      );
+    } catch (err) {
+      console.error("Error sending OTP email:", err);
+      throw new ApplicationError("Failed to send OTP email", 400);
+    }
+  };
+
+  generateTokens = async (user) => {
+    const accessToken = jwt.sign(
+      { userID: user._id, email: user.email },
+      jwtSecret,
+      { expiresIn: "1h" }
+    );
+
+    const refreshToken = jwt.sign(
+      { userID: user._id, email: user.email },
+      jwtSecret,
+      { expiresIn: "7d" }
+    );
+
+    return { accessToken, refreshToken, expiresIn: "1h" };
+  };
 
   SignUp = async (req, res, next) => {
     try {
@@ -36,7 +67,7 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new AuthModel(name, email, hashedPassword, gender,req.file.filename);
+      const user = new AuthModel(name, email, hashedPassword, gender, req.file.filename);
 
       const result = await this.authRepository.signUp(user);
 
@@ -94,6 +125,7 @@ export default class AuthController {
   SendOTP = async (req, res, next) => {
     try {
       const { email } = req.body;
+
       // checking first whether user is exist in the db or not
       const user = await this.authRepository.findByEmail(email);
       if (!user) throw new ApplicationError("User not found", 404);
@@ -108,6 +140,7 @@ export default class AuthController {
       await this.sendOTPEmail(email, otp);
 
       return res.status(200).json({ message: "OTP sent to email" });
+
     } catch (err) {
       next(err);
     }
@@ -119,13 +152,23 @@ export default class AuthController {
 
       const user = await this.authRepository.findByEmail(email);
 
-      if (!user || user.otp !== otp || Date.now() > user.otpExpiry) {
+      if (!user || !user.otp || Date.now() > user.otpExpiry) {
         throw new ApplicationError("Invalid or expired OTP", 400);
       }
 
+      if (user.otp !== otp) {
+        throw new ApplicationError("Invalid  OTP", 400);
+      }
+
+      const resetToken = crypto.randomBytes(32).toString("hex");
+
+      const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 mins
+
+      await this.authRepository.setResetToken(email, resetToken, resetTokenExpiry);
       await this.authRepository.clearOTP(email);
 
-      return res.status(200).json({ message: "OTP verified successfully" });
+      return res.status(200).json({ message: "OTP verified successfully", resetToken: user.resetToken });
+
     } catch (err) {
       next(err);
     }
@@ -133,14 +176,19 @@ export default class AuthController {
 
   ResetPasswordWithOTP = async (req, res, next) => {
     try {
-      const { email, newPassword } = req.body;
+      const { email, resetToken, newPassword } = req.body;
 
-      if (!newPassword) {
-        throw new ApplicationError("New password is required", 400);
+      if (!newPassword || !resetToken) {
+        throw new ApplicationError("Reset token and new password are required", 400);
       }
 
       const user = await this.authRepository.findByEmail(email);
       if (!user) throw new ApplicationError("User not found", 404);
+
+      console.log(user);
+      if (!user.resetToken || user.resetToken !== resetToken || Date.now() > user.resetTokenExpiry) {
+        throw new ApplicationError("Invalid or expired reset token", 400);
+      };
 
       const hashedPassword = await bcrypt.hash(newPassword, 12);
 
@@ -150,35 +198,6 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  };
-
-  sendOTPEmail = async (email, otp) => {
-    try {
-      await sendEmail(
-        email,
-        otp,
-        `Your OTP code is: ${otp}. It is valid for 10 minutes.`
-      );
-    } catch (err) {
-      console.error("Error sending OTP email:", err);
-      throw new ApplicationError("Failed to send OTP email", 400);
-    }
-  };
-
-  generateTokens = async (user) => {
-    const accessToken = jwt.sign(
-      { userID: user._id, email: user.email },
-      jwtSecret,
-      { expiresIn: "1h" }
-    );
-
-    const refreshToken = jwt.sign(
-      { userID: user._id, email: user.email },
-      jwtSecret,
-      { expiresIn: "7d" }
-    );
-
-    return { accessToken, refreshToken, expiresIn: "1h" };
   };
 
   // logout
