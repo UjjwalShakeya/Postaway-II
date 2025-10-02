@@ -93,18 +93,22 @@ export default class UserController {
         updateData.gender = gender.toLowerCase();
       }
 
+      if (req.file){
+        updateData.avatar = req.file.filename;
+      }
+
       // If no fields provided at all
       if (Object.keys(updateData).length === 0) {
         throw new ApplicationError(
-          "At least one field (name or gender) is required",
+          "At least one field (name or gender or avatar) is required",
           400
         );
       }
-
       const updatedUser = await this.userRepository.updateUserById(
         userId,
-        updateData
+        updateData,
       );
+
       if (!updatedUser) {
         throw new ApplicationError("User not found or not updated", 404);
       }

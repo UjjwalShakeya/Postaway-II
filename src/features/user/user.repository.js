@@ -49,7 +49,7 @@ export default class UserRepository {
       const users = await collection
         .find(query, { projection: { _id: 1, name: 1, gender: 1, email: 1, avatar: 1 } })
         .skip((pageNum - 1) * limitNum).limit(limitNum).toArray();
-        
+
       return {
         users,
         totalUsers,
@@ -75,7 +75,8 @@ export default class UserRepository {
           projection: { _id: 1, name: 1, gender: 1, email: 1, avatar: 1 },
         }
       );
-      return updatedUser.value;
+      return updatedUser;
+
     } catch (err) {
       throw err;
     }
