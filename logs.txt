@@ -1,2 +1,30 @@
 [2025-10-02T19:28:51.669Z] info: POST /api/posts Request Body Is Empty
 [2025-10-02T19:29:51.732Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-02T19:45:33.101Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-02T19:45:56.819Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-02T19:46:42.599Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-02T19:47:18.984Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-02T19:50:57.137Z] info: GET /api/posts/68dece02cc24ca38ae55dd93 Request Body Is Empty
+[2025-10-02T19:51:12.477Z] info: GET /api/posts/68ded273d6717da2f391234f Request Body Is Empty
+[2025-10-02T19:58:52.300Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T19:59:11.428Z] info: GET /api/posts/user/68dadf3770be62583ea2950 Request Body Is Empty
+[2025-10-02T19:59:38.731Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T19:59:46.492Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:00:37.941Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:01:02.233Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:02:09.273Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:02:35.356Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:03:04.770Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-02T20:08:22.511Z] info: DELETE /api/posts/68dece02cc24ca38ae55dd93 Request Body Is Empty
+[2025-10-02T20:10:08.170Z] info: DELETE /api/posts/68dece02cc24ca38ae55dd93 Request Body Is Empty
+[2025-10-02T20:16:51.718Z] info: POST /api/posts Request Body Is Empty
+[2025-10-02T20:17:02.349Z] info: POST /api/posts Request Body Is Empty
+[2025-10-02T20:19:58.837Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"_id":1245}
+[2025-10-02T20:20:56.367Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it"}
+[2025-10-02T20:22:46.553Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"_id":"i am going to post it"}
+[2025-10-02T20:30:53.668Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"pubish"}
+[2025-10-02T20:31:27.909Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"pubish"}
+[2025-10-02T20:31:53.107Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"archived"}
+[2025-10-02T20:32:04.394Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"publish"}
+[2025-10-02T20:32:18.176Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"archive"}
+[2025-10-02T20:32:22.134Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"draft"}

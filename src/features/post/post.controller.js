@@ -19,7 +19,7 @@ export default class PostController {
       if (!ObjectId.isValid(req.userID)) {
         throw new ApplicationError("Invalid userID", 400);
       };
-      
+
       const userID = new ObjectId(req.userID);
 
       const { caption, status } = req.body;
@@ -62,7 +62,7 @@ export default class PostController {
 
       const posts = await this.postRepository.getAllPosts(page, limit, caption);
 
-      if (!posts || posts.length == 0) throw new ApplicationError("posts not found", 400);
+      if (!posts || posts.totalPosts == 0) throw new ApplicationError("posts not found", 400);
 
       res.status(200).json({
         success: true,
@@ -103,12 +103,15 @@ export default class PostController {
   // retrieve post by the user credentials
   getPostsByUserCred = async (req, res, next) => {
     try {
-      const userID = req.params.userId;
-      if (!userID) throw new ApplicationError("User ID required", 400);
+
+      if (!ObjectId.isValid(req.params.userId)) {
+        throw new ApplicationError("Invalid userID", 400);
+      };
+      const userID = new ObjectId(req.params.userId);
 
       const postsByUserId = await this.postRepository.getPostsByUserCred(userID);
 
-      if (!postsByUserId) throw new ApplicationError("posts of user not found", 404);
+      if (!postsByUserId || postsByUserId.length == 0) throw new ApplicationError("posts of user not found", 404);
 
       res
         .status(200)
@@ -120,6 +123,9 @@ export default class PostController {
 
   deletePost = async (req, res, next) => {
     try {
+      if (!ObjectId.isValid(req.userID)) {
+        throw new ApplicationError("Invalid userID", 400);
+      };
 
       const postID = req.params.postId;
       const userID = req.userID;
@@ -127,6 +133,8 @@ export default class PostController {
       if (!postID || !userID) throw new ApplicationError("Post ID And User ID Both required", 400);
 
       const deletedPost = await this.postRepository.deletePost(postID, userID);
+
+      if (deletedPost.deletedCount === 0) throw new ApplicationError("No matching post found to delete", 404);
 
       res.status(200).json({
         success: true,
@@ -141,12 +149,19 @@ export default class PostController {
   // update the specific post
   updatePost = async (req, res, next) => {
     try {
+      if (!ObjectId.isValid(req.userID)) {
+        throw new ApplicationError("Invalid userID", 400);
+      };
       const userID = req.userID;
       const postID = req.params.postId;
       const newData = req.body;
 
+      if (newData.status == "draft") throw new ApplicationError("restricted to draft published/archieved posts", 400);
+
+      newData.status = newData.status == "publish" ? "published" : "archived";
+
       if (!postID || !userID) throw new ApplicationError("Missing post ID or user ID", 400);
-      if (newData.userId) throw new ApplicationError("you can't perform this action", 400);
+      if (newData.userId || newData.imageUrl || newData._id) throw new ApplicationError("you can't perform this action", 400);
 
       const updatedPost = await this.postRepository.updatePost(userID, postID, newData);
 

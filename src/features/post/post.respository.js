@@ -2,23 +2,22 @@
 
 // Import required packages :-
 // Application modules
-import ApplicationError from "../../../utils/ApplicationError.js";
 import { getDB } from "../../config/mongodb.js";
 import { ObjectId } from "mongodb";
 
 // Post Repository class
 export default class PostRepository {
-    // Initialize collection
+  // Initialize collection
   constructor() {
     this.collection = "posts";
   };
   // method to get collection
-  getCollection = async ()=>{
+  getCollection = async () => {
     const db = getDB();
     return db.collection(this.collection);
   };
 
-// Create a new post
+  // Create a new post
   async createPost(newPost) {
     try {
       // getting collection
@@ -29,7 +28,7 @@ export default class PostRepository {
       throw err
     }
   };
- // Retrieve all posts with optional caption filter and pagination
+  // Retrieve all posts with optional caption filter and pagination
   async getAllPosts(page, limit, caption) {
     try {
       // getting collection
@@ -125,15 +124,11 @@ export default class PostRepository {
       // getting collection
       const collection = await this.getCollection();
 
-      const result = await collection.deleteOne({
+      return await collection.deleteOne({
         _id: new ObjectId(postID),
-        userId: userID,
+        userId: new ObjectId(userID),
       });
 
-      if (result.deletedCount === 0)
-        throw new ApplicationError("No matching post found to delete", 404);
-
-      return result;
     } catch (err) {
       throw err
     }
@@ -144,13 +139,11 @@ export default class PostRepository {
       // getting collection
       const collection = await this.getCollection();
 
-      const updatedUser = await collection.findOneAndUpdate(
-        { _id: new ObjectId(postID), userId: userID },
-        { $set: data },
+      return await collection.findOneAndUpdate(
+        { _id: new ObjectId(postID), userId: new ObjectId(userID) },
+        { $set: { ...data, updatedAt: new Date() } },
         { returnDocument: "after" }
       );
-
-      return updatedUser;
 
     } catch (err) {
       throw err
