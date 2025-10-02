@@ -1,0 +1,2 @@
+[2025-10-02T19:28:51.669Z] info: POST /api/posts Request Body Is Empty
+[2025-10-02T19:29:51.732Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty

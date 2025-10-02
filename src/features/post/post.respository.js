@@ -13,7 +13,7 @@ export default class PostRepository {
     this.collection = "posts";
   };
   // method to get collection
-  getCollection = ()=>{
+  getCollection = async ()=>{
     const db = getDB();
     return db.collection(this.collection);
   };
@@ -22,8 +22,7 @@ export default class PostRepository {
   async createPost(newPost) {
     try {
       // getting collection
-      const collection = this.getCollection();
-
+      const collection = await this.getCollection();
       await collection.insertOne(newPost);
       return newPost;
     } catch (err) {
@@ -34,7 +33,7 @@ export default class PostRepository {
   async getAllPosts(page, limit, caption) {
     try {
       // getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // Convert to numbers safely
       const pageNum = Math.max(1, parseInt(page, 10) || 1);
@@ -73,7 +72,7 @@ export default class PostRepository {
   async getPostById(postId) {
     try {
       // getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // find post by id
       // Aggregation pipeline
@@ -102,7 +101,7 @@ export default class PostRepository {
   async getPostsByUserCred(userId) {
     try {
       // getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // Aggregation pipeline
       const pipeline = [
@@ -124,7 +123,7 @@ export default class PostRepository {
   async deletePost(postID, userID) {
     try {
       // getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       const result = await collection.deleteOne({
         _id: new ObjectId(postID),
@@ -143,7 +142,7 @@ export default class PostRepository {
   async updatePost(userID, postID, data) {
     try {
       // getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       const updatedUser = await collection.findOneAndUpdate(
         { _id: new ObjectId(postID), userId: userID },
