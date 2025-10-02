@@ -39,9 +39,13 @@ export default class UserController {
   // <<< Get all user details (no passwords) >>>
   getAllUsers = async (req, res, next) => {
     try {
-      const users = await this.userRepository.getAllUsers();
 
-      if (!users || users.length === 0) {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      
+      const users = await this.userRepository.getAllUsers(page,limit);
+
+      if (!users || users.totalPages === 0) {
         throw new ApplicationError("No users found", 404);
       };
       

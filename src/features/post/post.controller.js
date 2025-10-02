@@ -56,7 +56,7 @@ export default class PostController {
 
       const posts = await this.postRepository.getAllPosts(page, limit, caption);
 
-      if (!posts) throw new ApplicationError("post not found", 400);
+      if (!posts || posts.length == 0) throw new ApplicationError("posts not found", 400);
 
       res.status(200).json({
         success: true,
