@@ -5,17 +5,23 @@
 import ApplicationError from "../../../utils/ApplicationError.js";
 import PostModel from "./post.model.js";
 import PostRepository from "./post.respository.js";
+import { ObjectId } from "mongodb";
 
 export default class PostController {
-  
+
   constructor() {
     this.postRepository = new PostRepository();
   }
 
   // created new post
-  createPost = async (req, res, next)=> {
+  createPost = async (req, res, next) => {
     try {
-      const userID = req.userID;
+      if (!ObjectId.isValid(req.userID)) {
+        throw new ApplicationError("Invalid userID", 400);
+      };
+      
+      const userID = new ObjectId(req.userID);
+
       const { caption, status } = req.body;
 
       if (!req.file) throw new ApplicationError("Image file is required", 400);
@@ -29,7 +35,7 @@ export default class PostController {
         : "published";
 
       const newPost = new PostModel(
-        userID,
+        new ObjectId(userID),
         caption.trim(),
         req.file.filename,
         postStatus
@@ -47,8 +53,8 @@ export default class PostController {
     }
   };
 
-   // retrieve all posts
-  getAllPosts = async(req, res, next)=> {
+  // retrieve all posts
+  getAllPosts = async (req, res, next) => {
     try {
       const caption = req.query.caption || "";
       const page = parseInt(req.query.page) || 1;
@@ -75,7 +81,7 @@ export default class PostController {
   }
 
   // retrieve post by the id
-  getPostById=async(req, res, next)=> {
+  getPostById = async (req, res, next) => {
     try {
       const id = req.params.id;
 
@@ -95,7 +101,7 @@ export default class PostController {
   }
 
   // retrieve post by the user credentials
-   getPostsByUserCred = async(req, res, next)=> {
+  getPostsByUserCred = async (req, res, next) => {
     try {
       const userID = req.params.userId;
       if (!userID) throw new ApplicationError("User ID required", 400);
@@ -112,15 +118,15 @@ export default class PostController {
     }
   }
 
-   deletePost = async(req, res, next)=> {
+  deletePost = async (req, res, next) => {
     try {
 
       const postID = req.params.postId;
       const userID = req.userID;
 
       if (!postID || !userID) throw new ApplicationError("Post ID And User ID Both required", 400);
-      
-      const deletedPost = await this.postRepository.deletePost(postID,userID);
+
+      const deletedPost = await this.postRepository.deletePost(postID, userID);
 
       res.status(200).json({
         success: true,
@@ -133,19 +139,19 @@ export default class PostController {
   }
 
   // update the specific post
-   updatePost = async(req, res, next)=> {
+  updatePost = async (req, res, next) => {
     try {
       const userID = req.userID;
       const postID = req.params.postId;
       const newData = req.body;
-      
+
       if (!postID || !userID) throw new ApplicationError("Missing post ID or user ID", 400);
       if (newData.userId) throw new ApplicationError("you can't perform this action", 400);
 
       const updatedPost = await this.postRepository.updatePost(userID, postID, newData);
-  
+
       if (!updatedPost) throw new ApplicationError("Post not found or update failed", 404);
-      
+
       res.status(200).json({
         success: true,
         message: `${postID} post has been updated`,
@@ -154,86 +160,5 @@ export default class PostController {
     } catch (err) {
       next(err); // calling next with error, error will be caught by errorhandler Middleware
     }
-  }
-
-  // // retrieve filtered posts
-  // async getFilteredPosts(req, res, next) {
-  //   try {
-  //     const { caption } = req.query;
-  //     if (!caption) {
-  //       return res.status(400).json({ message: "Caption query is required" });
-  //     }
-  //     const filteredPosts = await PostModel.filter(req.query.caption);
-
-  //     if (!filteredPosts || filteredPosts.length === 0) {
-  //       return res
-  //         .status(404)
-  //         .json({ message: "No posts found with given caption" });
-  //     }
-  
-  //     res.status(200).json({
-  //       success: true,
-  //       message: "Filtered posts retrieved successfully",
-  //       data: filteredPosts,
-  //     });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
-
-
-  
-  // update the specific post status
-  // async postStatus(req, res, next) {
-  //   try {
-  //     const postID = parseInt(req.params.id);
-  //     const userID = req.userID;
-  //     const { status } = req.body;
-
-  //     if (!postID || postID <= 0 || !userID) {
-  //       throw new ApplicationError("Missing post ID or user ID", 400);
-  //     }
-
-  //     if (!status) {
-  //       throw new ApplicationError("Status field is required", 400);
-  //     }
-
-  //     const isPostStatusUpdated = await PostModel.updateStatus(
-  //       userID,
-  //       postID,
-  //       status
-  //     );
-  //     res
-  //       .status(200)
-  //       .json({
-  //         success: true,
-  //         message: `Post ${postID} status updated successfully`,
-  //         data: isPostStatusUpdated,
-  //       });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
-
-
-  // // Implement sorting of posts based on user engagement and date
-  // async getSortedPosts(req, res, next) {
-  //   try {
-  //     const allowedSorts = ["engagement", "date"];
-  //     const sortBy = allowedSorts.includes(req.query.sortBy)
-  //       ? req.query.sortBy
-  //       : "engagement";
-  //     console.log(sortBy);
-
-  //     const sortedPosts = await PostModel.getPostsSorted(sortBy);
-
-  //     res.status(200).json({
-  //       success: true,
-  //       message: `Sorted posts by ${sortBy}`,
-  //       data: sortedPosts,
-  //     });
-  //   } catch (err) {
-  //     next(err); // calling next with error, error will be caught by errorhandler Middleware
-  //   }
-  // }
+  };
 }

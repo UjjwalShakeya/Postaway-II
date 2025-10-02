@@ -50,20 +50,4 @@ PostRouter.delete("/:postId", jwtAuth, postController.deletePost);
 // upload.none() → ensures only text fields are updated
 PostRouter.put("/:postId", jwtAuth,postController.updatePost);
 
-// check a specific post status
-// PostRouter.patch("/:id/status", jwtAuth, (req, res, next) =>
-//   postController.postStatus(req, res, next)
-// ); 
-
-// Get posts on the basis of filter
-// PostRouter.get("/filter", (req, res, next) =>
-//   postController.getFilteredPosts(req, res, next)
-// ); 
-
-
-// // route for sorted posts
-// PostRouter.get("/sorted", jwtAuth, (req, res, next) =>
-//   postController.getSortedPosts(req, res, next)
-// );
-
 export default PostRouter;
