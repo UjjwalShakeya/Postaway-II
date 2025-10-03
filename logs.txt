@@ -38,3 +38,21 @@
 [2025-10-03T19:40:07.368Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
 [2025-10-03T19:40:14.560Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
 [2025-10-03T19:40:25.560Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c Request Body Is Empty
+[2025-10-03T20:23:48.350Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson"}
+[2025-10-03T20:24:05.091Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson"}
+[2025-10-03T20:29:46.965Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson"}
+[2025-10-03T20:30:14.372Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson"}
+[2025-10-03T20:42:42.618Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson"}
+[2025-10-03T20:42:52.096Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"My Name is jackson 2"}
+[2025-10-03T20:43:04.289Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"Amazing Knowledge"}
+[2025-10-03T20:43:24.576Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:43:33.047Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:43:38.755Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:45:08.996Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:45:35.965Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:45:51.402Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:46:04.863Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:46:28.302Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:49:07.052Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:51:11.501Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T20:51:54.904Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty

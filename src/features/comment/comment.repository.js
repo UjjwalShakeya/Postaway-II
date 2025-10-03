@@ -4,6 +4,8 @@
 // Application modules
 import { getDB } from "../../config/mongodb.js";
 import { ObjectId } from "mongodb";
+import CommentModel from "../comment/comment.model.js";
+
 
 // Comment Repository class
 export default class CommentRepository {
@@ -13,20 +15,20 @@ export default class CommentRepository {
   }
 
   // method to get collection
-  getCollection = () => {
+  getCollection = async () => {
     const db = getDB();
     return db.collection(this.collection);
   };
 
   // <<< create a freshly new comment >>>
-  createComment = async (data) => {
+  createComment = async (userId, postId, comment) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection();
-
+      const collection = await this.getCollection();
+      const newComment = new CommentModel(new ObjectId(userId), new ObjectId(postId), comment);
       // 2. creating comment
-      await collection.insertOne(data);
-      return data;
+      await collection.insertOne(newComment);
+      return newComment;
 
     } catch (err) {
       throw err;
@@ -37,25 +39,30 @@ export default class CommentRepository {
   getAllPostComments = async (postId, page, limit) => {
     try {
 
-      // 1. getting collection
-      const collection = this.getCollection();
+      // Convert to numbers safely
+      const pageNum = Math.max(1, parseInt(page, 10) || 1);
+      const limitNum = Math.max(1, parseInt(limit, 10) || 10);
 
-      const skip = (page - 1) * limit;
+      // 1. getting collection
+      const collection = await this.getCollection();
+
+      const skip = (pageNum - 1) * limitNum;
 
       // 2. Fetch comments with pagination
       const comments = await collection
-        .find({ postId: postId })
+        .find({ postId: new ObjectId(postId) })
         .skip(skip)
-        .limit(limit)
+        .limit(limitNum)
         .toArray();
 
       // 3. Count total comments for pagination metadata
-      const totalComments = await collection.countDocuments({ postId: postId });
+      const totalComments = await collection.countDocuments({ postId: new ObjectId(postId) });
+
       return {
         comments,
         totalComments,
-        totalPages: Math.ceil(totalComments / limit),
-        currentPage: page,
+        totalPages: Math.ceil(totalComments / limitNum),
+        currentPage: pageNum,
       };
     } catch (err) {
       throw err;
@@ -66,7 +73,7 @@ export default class CommentRepository {
   deleteComment = async (id, userId) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       return await collection.deleteOne({
         _id: new ObjectId(id),
@@ -82,7 +89,7 @@ export default class CommentRepository {
   updateComment = async (commentId, userId, comment) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       return await collection.updateOne(
         {

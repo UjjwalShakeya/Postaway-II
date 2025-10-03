@@ -21,7 +21,7 @@ export default class LikeRepository {
 
   // <<< Find a like by userId and postId >>>
   findLike = async (userId, postId) => {
-    try {
+    try {``
       // 1. getting collection
       const collection = await this.getCollection();
 

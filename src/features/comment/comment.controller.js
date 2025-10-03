@@ -2,7 +2,6 @@
 
 // Import required packages :-
 // Application modules 
-import CommentModel from "../comment/comment.model.js";
 import ApplicationError from "../../../utils/ApplicationError.js";
 import PostRepository from "../post/post.respository.js";
 import CommentRepository from "./comment.repository.js";
@@ -30,18 +29,13 @@ export default class CommentController {
         throw new ApplicationError("post not found", 404);
       }
 
-      // if post is in draft or in archived you can't comment
-      if (postExists.status == "draft" || postExists.status == "archived") {
-        throw new ApplicationError("not allowed to comment on this post", 400);
-      }
-
       const result = await this.commentRepository.getAllPostComments(
         postId,
         page,
         limit
       );
 
-      if (!result.comments || result.comments.length === 0) {
+      if (!result.comments || result.totalComments === 0) {
         throw new ApplicationError("No comments found for this post", 404);
       }
 
@@ -50,7 +44,7 @@ export default class CommentController {
         message: `comments for Post ${postId}`,
         comments: result.comments,
         pagination: {
-          totalPosts: result.totalComments,
+          totalComments: result.totalComments,
           totalPages: result.totalPages,
           currentPage: result.currentPage,
         },
@@ -80,8 +74,7 @@ export default class CommentController {
         throw new ApplicationError("Post not found", 404);
       }
 
-      const commentObj = new CommentModel(userId, postId, comment);
-      const newComment = await this.commentRepository.createComment(commentObj);
+      const newComment = await this.commentRepository.createComment(userId, postId, comment);
 
       if (!newComment) {
         throw new ApplicationError("error adding comment to post", 400);
