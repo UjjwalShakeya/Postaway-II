@@ -59,7 +59,7 @@ export default class LikeController {
       const postExists = await this.postRepository.getPostById(postId);  // Check if post exists
       if (!postExists) {
         throw new ApplicationError("Post not found", 404);
-      }
+      };
 
       const existingLike = await this.likeRepository.findLike(userId, postId); // Check if user already liked
       let likeToggle = false; // Will track whether like was added or removed
@@ -73,7 +73,6 @@ export default class LikeController {
         if (!likeRemoved) {
           throw new ApplicationError("Error removing like", 400);
         }
-        // likeToggle = false;
       } else {
          // If not liked → add like
         const isLikeAdded = await this.likeRepository.addLike(userId, postId);

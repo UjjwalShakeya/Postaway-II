@@ -14,7 +14,7 @@ export default class LikeRepository {
   };
 
   // method to get collection
-  getCollection = () => {
+  getCollection = async () => {
     const db = getDB();
     return db.collection(this.collection);
   };
@@ -23,15 +23,13 @@ export default class LikeRepository {
   findLike = async (userId, postId) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // 2. checking if like exist
-      const likeExist = await collection.findOne({
+      return await collection.findOne({
         userId: new ObjectId(userId),
         postId: new ObjectId(postId),
       });
-
-      return likeExist;
 
     } catch (err) {
       throw err;
@@ -41,15 +39,14 @@ export default class LikeRepository {
   removeLike = async (userId, postId) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection();
+      const collection = await this.getCollection();
 
       // 2. checking if like exist
-      const deletedLike = await collection.deleteOne({
+      return await collection.deleteOne({
         userId: new ObjectId(userId),
         postId: new ObjectId(postId),
       });
-
-      return deletedLike;
+      
     } catch (err) {
       throw err
     }
@@ -58,7 +55,7 @@ export default class LikeRepository {
   addLike = async (userId, postId) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection()
+      const collection = await this.getCollection()
 
       // 2. adding a like
       const newLikeObj = new LikeModel(
@@ -67,11 +64,9 @@ export default class LikeRepository {
       );
 
       // 3. checking if like exist
-      const newLike = await collection.insertOne(
+      return await collection.insertOne(
         newLikeObj,
       );
-
-      return newLike;
 
     } catch (err) {
       throw err
@@ -81,7 +76,7 @@ export default class LikeRepository {
   getAllLikes = async (postId) => {
     try {
       // 1. getting collection
-      const collection = this.getCollection()
+      const collection = await this.getCollection()
 
       // 2. fetching all likes for a post
       const allLikes = await collection.find({ postId: new ObjectId(postId) }).toArray();

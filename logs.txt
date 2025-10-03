@@ -28,3 +28,13 @@
 [2025-10-02T20:32:04.394Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"publish"}
 [2025-10-02T20:32:18.176Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"archive"}
 [2025-10-02T20:32:22.134Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"i am going to post it","status":"draft"}
+[2025-10-03T19:19:30.602Z] info: GET /api/likes/68b89ddef10cc57160dd565e Request Body Is Empty
+[2025-10-03T19:20:43.570Z] info: GET /api/likes/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:23:51.156Z] info: GET /api/likes/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:30:10.378Z] info: GET /api/likes/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:39:26.901Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:40:02.697Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:40:05.811Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:40:07.368Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:40:14.560Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T19:40:25.560Z] info: POST /api/likes/toggle/68deddbefb9edfae47b0c9c Request Body Is Empty
