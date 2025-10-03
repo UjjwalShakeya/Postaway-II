@@ -56,3 +56,16 @@
 [2025-10-03T20:49:07.052Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
 [2025-10-03T20:51:11.501Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
 [2025-10-03T20:51:54.904Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T21:06:55.563Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T21:07:22.532Z] info: POST /api/comments/68deddbefb9edfae47b0c9c2 {"comment":"OntoGenesis"}
+[2025-10-03T21:08:19.031Z] info: GET /api/comments/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-03T21:16:06.989Z] info: DELETE /api/comments/68e0354223196387b25ad1c2 Request Body Is Empty
+[2025-10-03T21:16:12.937Z] info: DELETE /api/comments/68e0354223196387b25ad1c2 Request Body Is Empty
+[2025-10-03T21:16:54.666Z] info: DELETE /api/comments/68e0354223196387b25ad1c2 Request Body Is Empty
+[2025-10-03T21:17:53.117Z] info: DELETE /api/comments/68e0354223196387b25ad1c2 Request Body Is Empty
+[2025-10-03T21:18:09.094Z] info: DELETE /api/comments/68e03b0a62b2b5bdc4a223a5 Request Body Is Empty
+[2025-10-03T21:18:13.237Z] info: DELETE /api/comments/68e03b0a62b2b5bdc4a223a5 Request Body Is Empty
+[2025-10-03T21:20:02.816Z] info: PUT /api/comments/68e0355823196387b25ad1c4 {"comment":"new Comment 1"}
+[2025-10-03T21:20:20.584Z] info: PUT /api/comments/68e0355823196387b25ad1c7 {"comment":"new Comment 1"}
+[2025-10-03T21:20:32.678Z] info: PUT /api/comments/68e0355823196387b25ad1t6 {"comment":"new Comment 1"}
+[2025-10-03T21:20:38.884Z] info: PUT /api/comments/68e0355823196387b25ad1c7 {"comment":"new Comment 1"}

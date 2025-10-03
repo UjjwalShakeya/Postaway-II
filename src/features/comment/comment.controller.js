@@ -104,7 +104,7 @@ export default class CommentController {
 
       if (!deletedComment || deletedComment.deletedCount <= 0) {
         throw new ApplicationError(
-          "Something went wrong while deleting comment",
+          `Comment not found with this id ${commentId}`,
           400
         );
       };

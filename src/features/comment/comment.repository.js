@@ -77,7 +77,7 @@ export default class CommentRepository {
 
       return await collection.deleteOne({
         _id: new ObjectId(id),
-        userId: userId,
+        userId: new ObjectId(userId),
       });
 
     } catch (err) {
@@ -94,7 +94,7 @@ export default class CommentRepository {
       return await collection.updateOne(
         {
           _id: new ObjectId(commentId),
-          userId: userId,
+          userId: new ObjectId(userId),
         },
         { $set: { comment } }
       );
