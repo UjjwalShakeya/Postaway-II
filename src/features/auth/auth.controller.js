@@ -111,11 +111,28 @@ export default class AuthController {
 
       const { accessToken, refreshToken, expiresIn } =
         await this.generateTokens(user);
+
       await this.authRepository.addRefreshToken(user._id, refreshToken);
 
+      // Set cookies
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,// prevents JS access (secure against XSS)
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000 // for 1h
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
       return res.status(200).json({
+        success: true,
         message: "Login successful",
-        data: { accessToken, refreshToken, expiresIn },
       });
     } catch (err) {
       next(err);

@@ -10,7 +10,6 @@ import userRouter from "./src/features/user/user.routes.js";
 import PostRouter from "./src/features/post/post.routes.js";
 import commentRouter from "./src/features/comment/comment.routes.js";
 import LikeRouter from "./src/features/like/like.routes.js";
-import bookmarkRouter from "./src/features/bookmark/bookmark.routes.js";
 import friendsRouter from "./src/features/friendship/friendship.routes.js";
 
 // importing middlewares
@@ -47,8 +46,6 @@ app.use("/api/comments", commentRouter);
 
 // // like Router On post
 app.use("/api/likes", LikeRouter);
-
-app.use("/api/bookmarks", bookmarkRouter);
 
 app.use("/api/friends", friendsRouter);
 

@@ -28,16 +28,14 @@ export default class FriendshipRepository {
       // write you code down here
       const collection = await this.getCollection();
 
-      const requests = await collection.find({
+      return await collection.find({
         status: { $in: ['accepted'] },
         $or: [
           { userId: userID },
           { friendId: userID }
         ]
       }).toArray();
-
-      return requests;
-
+      
     } catch (err) {
       throw err;
     }
