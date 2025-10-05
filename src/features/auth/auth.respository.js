@@ -17,12 +17,41 @@ export default class AuthRepository {
     return db.collection(this.collection);
   }
 
+  findById = async (userId) => {
+    try {
+      const collection = await this.getCollection();
+
+      const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+      return user;
+
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  incrementTokenVersion = async (userId) => {
+    try {
+      const collection = await this.getCollection();
+
+      await collection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $inc: { tokenVersion: 1 } }
+      );
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   // Create a new user document in the DB
   signUp = async (newUser) => {
     try {
       // step 1. get collection
       const collection = await this.getCollection();
-
+      
+      newUser.tokenVersion = 0;
+      
       // step 2. add new user in db
       await collection.insertOne(newUser);
 
@@ -54,11 +83,13 @@ export default class AuthRepository {
           otpExpiry: 1,
           refreshTokens: 1,
           resetToken: 1,
-          resetTokenExpiry: 1
+          resetTokenExpiry: 1,
+          tokenVersion: 1
         },
       }
     );
-  }
+  };
+
 
   // set OTP in database Document
   setOTP = async (email, otp, otpExpiry) => {
@@ -169,7 +200,7 @@ export default class AuthRepository {
     }
   }
 
-  async findByRefreshToken(refreshToken) {
+   findByRefreshToken = async(refreshToken)=> {
     try {
       const collection = await this.getCollection();
       // find by token

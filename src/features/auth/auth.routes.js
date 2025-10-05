@@ -46,10 +46,16 @@ authRouter.post("/logout", jwtAuth, authController.Logout);
 authRouter.post("/logout-all-devices", jwtAuth, authController.LogoutAll);
 
 /**
+ * Route: POST /refresh-token
+ * Purpose: Generate a new access token using a valid refresh token
+ * Middleware: None → works even if access token is expired (relies on refresh token)
+ */
+authRouter.post("/refresh-token", authController.RefreshToken);
+
+/**
  * Route: POST /otp/send
  * Purpose: Send OTP to user
  */
-
 authRouter.post("/otp/send", authController.SendOTP);
 
 /**

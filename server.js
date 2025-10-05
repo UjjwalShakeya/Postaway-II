@@ -3,6 +3,7 @@ import "./env.js";
 
 // Imported important Packages
 import express from "express";
+import cookieParser from "cookie-parser";
 
 // Imported route files
 import authRouter from "./src/features/auth/auth.routes.js";
@@ -27,6 +28,9 @@ const app = express();
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing form data
+
+// enabling cookie for all routes 
+app.use(cookieParser());
 
 // using logger middlware for every request
 app.use(loggerMiddleware);

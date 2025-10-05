@@ -9,9 +9,29 @@ import ApplicationError from "../../../utils/ApplicationError.js";
 
 // Utils
 import { sendEmail } from "../../../services/email.service.js";
+import { setAuthCookies, clearAuthCookies } from "../../../utils/cookies.js";
 
 // jwt secret from from dot env
 const jwtSecret = process.env.JWT_SECRET;
+
+export const generateAccessToken = async (user) => {
+  const accessToken = jwt.sign(
+    { userID: user._id, tokenVersion: user.tokenVersion },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" } // short-lived
+  );
+  return { accessToken, expiresIn: 15 * 60 * 1000 };
+};
+
+export const generateRefreshToken = async (user, authRepository) => {
+  const refreshToken = jwt.sign(
+    { userID: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+  await authRepository.addRefreshToken(user._id, refreshToken);
+  return refreshToken;
+};
 
 export default class AuthController {
   constructor() {
@@ -32,22 +52,6 @@ export default class AuthController {
     }
   };
 
-  generateTokens = async (user) => {
-    const accessToken = jwt.sign(
-      { userID: user._id, email: user.email },
-      jwtSecret,
-      { expiresIn: "1h" }
-    );
-
-    const refreshToken = jwt.sign(
-      { userID: user._id, email: user.email },
-      jwtSecret,
-      { expiresIn: "7d" }
-    );
-
-    return { accessToken, refreshToken, expiresIn: "1h" };
-  };
-
   SignUp = async (req, res, next) => {
     try {
       const { name, email, password, gender } = req.body;
@@ -59,7 +63,7 @@ export default class AuthController {
 
       if (!req.file) throw new ApplicationError("Avatar Image is required", 400);
 
-      const existingUser = await this.authRepository.findByEmail(email);
+      const existingUser = await this.authRepository.findByEmail(email.toLowerCase());
 
       if (existingUser) {
         throw new ApplicationError("User already exists with this email", 409);
@@ -67,14 +71,15 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new AuthModel(name, email, hashedPassword, gender, req.file.filename);
+      const user = new AuthModel(name, email.toLowerCase(), hashedPassword, gender, req.file.filename);
 
       const result = await this.authRepository.signUp(user);
 
-      const { accessToken, refreshToken, expiresIn } =
-        await this.generateTokens(result);
+      const { accessToken, expiresIn } = generateAccessToken(result);
+      const refreshToken = generateRefreshToken(result, this.authRepository);
+      // await this.authRepository.addRefreshToken(result._id, refreshToken);
 
-      await this.authRepository.addRefreshToken(result._id, refreshToken);
+      setAuthCookies(res, accessToken, expiresIn, refreshToken);
 
       return res.status(201).json({
         message: "User created successfully",
@@ -85,9 +90,6 @@ export default class AuthController {
           email: result.email,
           avatar: result.avatar,
         },
-        accessToken,
-        refreshToken,
-        expiresIn,
       });
     } catch (err) {
       next(err);
@@ -103,37 +105,51 @@ export default class AuthController {
         throw new ApplicationError("Email and password required", 400);
 
       const user = await this.authRepository.findByEmail(email.toLowerCase());
+
       if (!user) throw new ApplicationError("Invalid email or password", 401);
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch)
         throw new ApplicationError("Invalid email or password", 401);
 
-      const { accessToken, refreshToken, expiresIn } =
-        await this.generateTokens(user);
+      const { accessToken, expiresIn } = await generateAccessToken(user);
+      const refreshToken = await generateRefreshToken(user, this.authRepository);
 
-      await this.authRepository.addRefreshToken(user._id, refreshToken);
-
-      // Set cookies
-
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,// prevents JS access (secure against XSS)
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 60 * 60 * 1000 // for 1h
-      });
-
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
+      setAuthCookies(res, accessToken, expiresIn, refreshToken);
 
       return res.status(200).json({
         success: true,
         message: "Login successful",
       });
+    } catch (err) {
+      next(err);
+    }
+  };
+  // logout
+  Logout = async (req, res, next) => {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (refreshToken) await this.authRepository.removeRefreshToken(req.userID, refreshToken);
+      clearAuthCookies(res);
+
+      res.status(200).json({ success: true, message: "Logged out successfully" });
+  
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  // logout all
+  LogoutAll = async (req, res, next) => {
+    try {
+      const userId = req.userID;
+      if (!userId) throw new ApplicationError("User ID required", 400);
+
+      await this.authRepository.removeAllRefreshToken(userId);
+      await this.authRepository.incrementTokenVersion(userId);
+
+      clearAuthCookies(res);
+      res.status(200).json({ success: true, message: "Logged out from all devices" });
     } catch (err) {
       next(err);
     }
@@ -216,35 +232,23 @@ export default class AuthController {
       next(err);
     }
   };
-
-  // logout
-  Logout = async (req, res, next) => {
+  
+  RefreshToken = async (req, res, next) => {
     try {
-      const { refreshToken } = req.body;
-      const user = await this.authRepository.findByRefreshToken(refreshToken);
-      // user not found
-      if (!user) throw new ApplicationError("Invalid refresh token", 400);
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) return res.status(401).json({ error: "No refresh token" });
 
-      await this.authRepository.removeRefreshToken(user._id, refreshToken);
+      let payload;
+      try { payload = jwt.verify(refreshToken, process.env.JWT_SECRET); }
+      catch { return res.status(401).json({ error: "Invalid or expired refresh token" }); }
 
-      return res.status(200).json({ message: "Logged out successfully" });
-    } catch (err) {
-      next(err);
-    }
-  };
+      const user = await this.authRepository.findById(payload.userID);
+      if (!user || !user.refreshTokens.includes(refreshToken)) return res.status(401).json({ error: "Refresh token revoked" });
 
-  // logout all
-  LogoutAll = async (req, res, next) => {
-    try {
-      const userId = req.userID;
+      const { accessToken, expiresIn } = generateAccessToken(user);
 
-      // user not found
-      if (!userId) {
-        throw new ApplicationError("User ID required", 400);
-      }
-      await this.authRepository.removeAllRefreshToken(userId);
-
-      return res.status(200).json({ message: "Logged out from all devices" });
+      setAuthCookies(res, accessToken, expiresIn); // no need to set refresh token again
+      res.status(200).json({ success: true, message: "Access token refreshed" });
     } catch (err) {
       next(err);
     }
