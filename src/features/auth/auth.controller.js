@@ -56,7 +56,7 @@ export default class AuthController {
     try {
       const { name, email, password, gender } = req.body;
       let allowedGenders = ["male", "female", "other"];
-      
+
       // Double-check input
       if (!name || !email || !password || !gender) {
         throw new ApplicationError("All fields are required", 400);
@@ -161,6 +161,7 @@ export default class AuthController {
   };
 
   SendOTP = async (req, res, next) => {
+
     try {
       const { email } = req.body;
 
@@ -205,7 +206,7 @@ export default class AuthController {
       await this.authRepository.setResetToken(email, resetToken, resetTokenExpiry);
       await this.authRepository.clearOTP(email);
 
-      return res.status(200).json({ message: "OTP verified successfully", resetToken: user.resetToken });
+      return res.status(200).json({ message: "OTP verified successfully", resetToken });
 
     } catch (err) {
       next(err);
@@ -223,7 +224,6 @@ export default class AuthController {
       const user = await this.authRepository.findByEmail(email);
       if (!user) throw new ApplicationError("User not found", 404);
 
-      console.log(user);
       if (!user.resetToken || user.resetToken !== resetToken || Date.now() > user.resetTokenExpiry) {
         throw new ApplicationError("Invalid or expired reset token", 400);
       };
@@ -232,7 +232,12 @@ export default class AuthController {
 
       await this.authRepository.updatePassword(email, hashedPassword);
 
-      return res.status(200).json({ message: "Password reset successful" });
+      res.clearCookie("accessToken", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/" });
+      res.clearCookie("refreshToken", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/" });
+
+      return res.status(200).json({ message: "Password reset successful. Please sign in again to continue." });
+
+
     } catch (err) {
       next(err);
     }
