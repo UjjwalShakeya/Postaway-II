@@ -27,7 +27,7 @@ export default class UserController {
         throw new ApplicationError("User not found", 404);
       }
       return res.status(200).json({
-        success:true,
+        success: true,
         message: "user details retrieved successfully",
         user,
       });
@@ -42,15 +42,15 @@ export default class UserController {
 
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
-      
-      const users = await this.userRepository.getAllUsers(page,limit);
+
+      const users = await this.userRepository.getAllUsers(page, limit);
 
       if (!users || users.totalPages === 0) {
         throw new ApplicationError("No users found", 404);
       };
-      
+
       return res.status(200).json({
-        success:true,
+        success: true,
         message: "all users details retrieved successfully",
         users,
       });
@@ -62,7 +62,8 @@ export default class UserController {
   // <<< Update user details (no passwords) >>>
   updateUserById = async (req, res, next) => {
     try {
-      const userId = req.params.userId;
+      // const userId = req.params.userId; // for security reason we have stopped using params approach
+      const userId = req.userID; // this will allow user to update his details only not anyone's else
       const name = req.body.name;
       const gender = req.body.gender;
 
@@ -93,7 +94,7 @@ export default class UserController {
         updateData.gender = gender.toLowerCase();
       }
 
-      if (req.file){
+      if (req.file) {
         updateData.avatar = req.file.filename;
       }
 
@@ -113,7 +114,7 @@ export default class UserController {
         throw new ApplicationError("User not found or not updated", 404);
       }
       return res.status(200).json({
-        success:true,
+        success: true,
         message: "User details updated successfully",
         updatedUser,
       });

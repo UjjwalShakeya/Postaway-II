@@ -55,10 +55,15 @@ export default class AuthController {
   SignUp = async (req, res, next) => {
     try {
       const { name, email, password, gender } = req.body;
-
+      let allowedGenders = ["male", "female", "other"];
+      
       // Double-check input
       if (!name || !email || !password || !gender) {
         throw new ApplicationError("All fields are required", 400);
+      }
+
+      if (!allowedGenders.includes(gender.toLowerCase())) {
+        throw new ApplicationError("Please provide valid gender", 400);
       }
 
       if (!req.file) throw new ApplicationError("Avatar Image is required", 400);
@@ -71,7 +76,7 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = new AuthModel(name, email.toLowerCase(), hashedPassword, gender, req.file.filename);
+      const user = new AuthModel(name, email.toLowerCase(), hashedPassword, gender.toLowerCase(), req.file.filename);
 
       const result = await this.authRepository.signUp(user);
 
@@ -133,7 +138,7 @@ export default class AuthController {
       clearAuthCookies(res);
 
       res.status(200).json({ success: true, message: "Logged out successfully" });
-  
+
     } catch (err) {
       next(err);
     }
@@ -232,7 +237,7 @@ export default class AuthController {
       next(err);
     }
   };
-  
+
   RefreshToken = async (req, res, next) => {
     try {
       const refreshToken = req.cookies.refreshToken;

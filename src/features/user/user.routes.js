@@ -27,7 +27,7 @@ userRouter.get("/get-all-details/", jwtAuth, userController.getAllUsers);
 // Purpose: Update details of a specific user
 // Middleware: jwtAuth → ensures user is authenticated
 userRouter.put(
-  "/update-details/:userId/", upload.single("avatar"),
+  "/update-details/", upload.single("avatar"),
   jwtAuth,
   userController.updateUserById
 );
