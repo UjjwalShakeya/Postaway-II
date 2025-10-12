@@ -157,17 +157,17 @@ export default class PostController {
       const newData = req.body;
 
 
-      if (data.status) {
-        if (data.status === "draft") {
+      if (newData.status) {
+        if (newData.status === "draft") {
           throw new ApplicationError("Restricted to draft — cannot modify published/archived posts", 400);
         }
 
         const validStatuses = ["published", "archived"];
 
-        if (!validStatuses.includes(data.status)) {
+        if (!validStatuses.includes(newData.status)) {
           throw new ApplicationError("Acceptance Status: published/archived", 400);
         }
-        data.status = data.status.toLowerCase();
+        newData.status = newData.status.toLowerCase();
       }
 
       if (!postID || !userID) throw new ApplicationError("Missing post ID or user ID", 400);
