@@ -156,15 +156,25 @@ export default class PostController {
       const postID = req.params.postId;
       const newData = req.body;
 
-      if (newData.status == "draft") throw new ApplicationError("restricted to draft published/archieved posts", 400);
 
-      newData.status = newData.status == "publish" ? "published" : "archived";
+      if (data.status) {
+        if (data.status === "draft") {
+          throw new ApplicationError("Restricted to draft — cannot modify published/archived posts", 400);
+        }
+
+        const validStatuses = ["published", "archived"];
+
+        if (!validStatuses.includes(data.status)) {
+          throw new ApplicationError("Acceptance Status: published/archived", 400);
+        }
+        data.status = data.status.toLowerCase();
+      }
 
       if (!postID || !userID) throw new ApplicationError("Missing post ID or user ID", 400);
       if (newData.userId || newData.imageUrl || newData._id) throw new ApplicationError("you can't perform this action", 400);
 
       const updatedPost = await this.postRepository.updatePost(userID, postID, newData);
-
+      console.log(updatedPost);
       if (!updatedPost) throw new ApplicationError("Post not found or update failed", 404);
 
       res.status(200).json({

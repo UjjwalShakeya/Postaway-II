@@ -48,6 +48,6 @@ PostRouter.delete("/:postId", jwtAuth, postController.deletePost);
 // Purpose: Update a specific post by its ID
 // Middleware: jwtAuth → ensures user is authenticated
 // upload.none() → ensures only text fields are updated
-PostRouter.put("/:postId", jwtAuth,postController.updatePost);
+PostRouter.put("/:postId", upload.none(), jwtAuth,postController.updatePost);
 
 export default PostRouter;

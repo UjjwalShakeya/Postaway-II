@@ -22,3 +22,52 @@
 [2025-10-11T20:16:16.454Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
 [2025-10-11T20:16:25.962Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
 [2025-10-11T20:17:03.799Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:19:55.245Z] info: POST /api/users/otp/send {"email":"ujjwalshakeya1@gmail.com"}
+[2025-10-12T15:20:55.621Z] info: POST /api/users/otp/verify {"email":"ujjwalshakeya1@gmail.com","otp":"507423"}
+[2025-10-12T15:21:22.113Z] info: POST /api/users/otp/reset-password {"email":"ujjwalshakeya1@gmail.com","resetToken":"217286604ecf76fcb6a1a15fc46247163b037e7a6cf4579b81a07f78d6bab1ab","newPassword":"@Password2"}
+[2025-10-12T15:22:03.243Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:22:21.986Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:24:33.991Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:25:43.976Z] info: POST /api/users/logout Request Body Is Empty
+[2025-10-12T15:26:05.254Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:26:16.109Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:26:21.691Z] info: GET /api/users/get-details/68ea888cada80821c431d125 Request Body Is Empty
+[2025-10-12T15:26:28.400Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:26:47.170Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-10-12T15:27:08.819Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:27:15.075Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-12T15:28:43.782Z] info: PUT /api/users/update-details/ Request Body Is Empty
+[2025-10-12T15:28:52.733Z] info: PUT /api/users/update-details/ Request Body Is Empty
+[2025-10-12T15:30:39.921Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-12T15:33:02.469Z] info: GET /api/posts/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-12T15:33:12.433Z] info: GET /api/posts/68ded273d6717da2f391234f Request Body Is Empty
+[2025-10-12T15:35:02.415Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-12T15:41:46.435Z] info: GET /api/posts/all?page=1&limit=10 Request Body Is Empty
+[2025-10-12T15:48:18.097Z] info: GET /api/posts/68ded273d6717da2f391234f Request Body Is Empty
+[2025-10-12T15:48:56.136Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-12T15:49:04.848Z] info: GET /api/posts/user/68dadf3770be62583ea29504 Request Body Is Empty
+[2025-10-12T15:52:50.689Z] info: POST /api/posts Request Body Is Empty
+[2025-10-12T15:54:27.442Z] info: DELETE /api/posts/68ebced21d1c7cb2173da369 Request Body Is Empty
+[2025-10-12T15:55:12.737Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-12T15:55:44.233Z] info: GET /api/posts/user/68dadf3770be62583ea29505 Request Body Is Empty
+[2025-10-12T16:02:01.269Z] info: PUT /api/posts/68ebced21d1c7cb2173da369 {"caption":"i am going to post it","status":"draft"}
+[2025-10-12T16:04:15.709Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"Ontogenesis","status":"draft"}
+[2025-10-12T16:05:00.360Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"Ontogenesis","status":"archieved"}
+[2025-10-12T16:05:11.058Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"caption":"Ontogenesis","status":"archiev"}
+[2025-10-12T16:08:07.513Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-12T16:11:58.372Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 Request Body Is Empty
+[2025-10-12T16:13:02.678Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archieve"}
+[2025-10-12T16:13:30.401Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archiev"}
+[2025-10-12T16:13:37.939Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archiev"}
+[2025-10-12T16:14:29.391Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archiev"}
+[2025-10-12T16:15:51.113Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archiev"}
+[2025-10-12T16:17:27.142Z] info: PUT /api/posts/68deddbefb9edfae47b0c9c2 {"status":"archiev"}
+[2025-10-12T16:22:29.991Z] info: POST /api/posts Request Body Is Empty
+[2025-10-12T16:24:03.589Z] info: PUT /api/posts/68ebd5c68478495fe2dac37d Request Body Is Empty
+[2025-10-12T16:25:07.560Z] info: POST /api/posts Request Body Is Empty
+[2025-10-12T16:26:15.284Z] info: PUT /api/posts/68ebd5c68478495fe2dac37d Request Body Is Empty
+[2025-10-12T16:26:35.673Z] info: PUT /api/posts/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-12T16:31:09.806Z] info: PUT /api/posts/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-12T16:31:18.861Z] info: PUT /api/posts/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-12T16:31:46.352Z] info: PUT /api/posts/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-12T16:32:41.106Z] info: PUT /api/posts/68ebd6638478495fe2dac37e Request Body Is Empty
