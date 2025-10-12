@@ -174,7 +174,6 @@ export default class PostController {
       if (newData.userId || newData.imageUrl || newData._id) throw new ApplicationError("you can't perform this action", 400);
 
       const updatedPost = await this.postRepository.updatePost(userID, postID, newData);
-      console.log(updatedPost);
       if (!updatedPost) throw new ApplicationError("Post not found or update failed", 404);
 
       res.status(200).json({

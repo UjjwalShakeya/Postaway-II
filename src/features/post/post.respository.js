@@ -18,7 +18,7 @@ export default class PostRepository {
   };
 
   // Create a new post
-  async createPost(newPost) {
+  createPost = async (newPost) => {
     try {
       // getting collection
       const collection = await this.getCollection();
@@ -29,7 +29,7 @@ export default class PostRepository {
     }
   };
   // Retrieve all posts with optional caption filter and pagination
-  async getAllPosts(page, limit, caption) {
+  getAllPosts = async (page, limit, caption) => {
     try {
       // getting collection
       const collection = await this.getCollection();
@@ -68,7 +68,7 @@ export default class PostRepository {
   };
 
   // Retrieve a single post by ID
-  async getPostById(postId) {
+   getPostById=async(postId) =>{
     try {
       // getting collection
       const collection = await this.getCollection();
@@ -97,7 +97,7 @@ export default class PostRepository {
   }
 
   // Retrieve all posts for a specific user
-  async getPostsByUserCred(userId) {
+   getPostsByUserCred=async(userId)=> {
     try {
       // getting collection
       const collection = await this.getCollection();
@@ -119,7 +119,7 @@ export default class PostRepository {
   };
 
   // Delete a post by ID for a specific user
-  async deletePost(postID, userID) {
+   deletePost=async(postID, userID)=> {
     try {
       // getting collection
       const collection = await this.getCollection();
@@ -134,7 +134,7 @@ export default class PostRepository {
     }
   }
   // Update a post by ID for a specific user
-  async updatePost(userID, postID, data) {
+   updatePost=async(userID, postID, data)=> {
     try {
       // getting collection
       const collection = await this.getCollection();
