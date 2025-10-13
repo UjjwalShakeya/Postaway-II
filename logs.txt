@@ -122,3 +122,31 @@
 [2025-10-13T18:51:39.149Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
 [2025-10-13T18:51:42.713Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
 [2025-10-13T18:52:07.973Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:57:42.683Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:57:44.775Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:57:46.687Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:58:10.233Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:58:33.697Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:58:47.624Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:59:15.704Z] info: POST /api/friends/response-to-request/68eaadea5a69a5f89b56dc0e {"action":"accept"}
+[2025-10-13T18:59:58.939Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T19:08:09.152Z] info: GET /api/comments/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-13T19:08:27.297Z] info: POST /api/comments/68ebd6638478495fe2dac37e {"comment":"OntoGenesis"}
+[2025-10-13T19:08:53.621Z] info: GET /api/comments/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-13T19:09:28.611Z] info: PUT /api/comments/68ebd6638478495fe2dac37e {"comment":"new Comment 1"}
+[2025-10-13T19:10:11.997Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new Comment 1"}
+[2025-10-13T19:10:25.893Z] info: PUT /api/comments/68ebd6638478495fe2dac37e {"comment":"new Comment 1"}
+[2025-10-13T19:11:13.815Z] info: PUT /api/comments/68ebd6638478495fe2dac37e {"comment":"new Comment 1"}
+[2025-10-13T19:11:20.757Z] info: PUT /api/comments/68e0355823196387b25ad1c7 {"comment":"new Comment 1"}
+[2025-10-13T19:11:37.430Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new Comment 2"}
+[2025-10-13T19:15:10.766Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new Comment 2"}
+[2025-10-13T19:15:29.416Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new Comment 2"}
+[2025-10-13T19:15:34.292Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new Comment 2"}
+[2025-10-13T19:15:46.049Z] info: PUT /api/comments/68ed4e2bd63dc7c622556928 {"comment":"new  2"}
+[2025-10-13T19:16:39.875Z] info: POST /api/users/logout-all-devices Request Body Is Empty
+[2025-10-13T19:17:05.334Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-13T19:17:31.085Z] info: POST /api/users/logout Request Body Is Empty
+[2025-10-13T19:17:34.032Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-13T19:17:41.069Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty
+[2025-10-13T19:17:43.414Z] info: POST /api/users/logout Request Body Is Empty
+[2025-10-13T19:17:45.807Z] info: GET /api/users/get-all-details?page=1&limit=5 Request Body Is Empty

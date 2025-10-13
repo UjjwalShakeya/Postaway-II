@@ -1,9 +1,10 @@
+
 ---
 
-# 📌 Postaway
+# 📌 Postaway-II
 
-Postaway is a social media backend application built with **Node.js, Express.js**.
-It provides user authentication, post creation & management, comments, likes, bookmarks, and additional features like filtering, sorting, and pagination.
+**Postaway-II** is a robust social media backend REST API built with **Node.js, Express.js, and MongoDB**.
+It enables users to post, comment, like, manage friendships, and securely reset passwords via OTPs. The system is designed with modular architecture, repository pattern, and follows RESTful principles for scalability and maintainability.
 
 ---
 
@@ -11,60 +12,104 @@ It provides user authentication, post creation & management, comments, likes, bo
 
 ### Core Features
 
-* 👤 **User Management**: Register, login, view users.
-* 📝 **Post Management**: Create, retrieve, update, and delete posts.
-* 💬 **Comments**: Add, update, delete, and view comments on posts.
-* 👍 **Likes**: Toggle like/unlike on posts.
-* 🔐 **Authentication**: JWT-based secure authentication.
-* 📦 **File Uploads**: Upload media for posts.
-* 🛑 **Error Handling**: Centralized error middleware.
-* 📑 **Logging**: Request logger middleware (excludes user routes).
+* 👤 **User Authentication & Management**
 
-### Additional Features Implemented
+  * User registration & login
+  * Logout & logout from all devices
+  * Secure password reset via OTP
+  * Profile updates with avatar uploads
+* 📝 **Post Management**
 
-* 🔍 **Filter posts** by caption.
-* 🗂 **Draft & Archive posts**.
-* 📊 **Sort posts** by engagement & date.
-* 📌 **Bookmark posts** for later.
-* 📄 **Pagination** for posts & comments.
+  * Create, read, update, delete posts
+  * Only post owners can modify or delete posts
+* 💬 **Comment System**
+
+  * Add, edit, delete, and view comments
+  * Only post owners or commenters can modify/delete comments
+* 👍 **Like Functionality**
+
+  * Like/unlike posts and comments
+  * Like counts and user info populated
+* 🤝 **Friendship Features**
+
+  * Send, accept, reject, cancel, and unfriend
+  * Retrieve friends list and pending requests
+* 🔐 **Security**
+
+  * JWT-based authentication
+  * Access & refresh tokens stored in cookies
+* 📦 **File Uploads**
+
+  * Avatar and post image uploads via Multer
+* 🛑 **Error Handling**
+
+  * Centralized error middleware with descriptive messages
+* 📑 **Logging**
+
+  * Request logging middleware for debugging and monitoring
 
 ---
 
 ## 🛠 Tech Stack
 
 * **Backend**: Node.js, Express.js
-* **Authentication**: JWT (JSON Web Token)
-* **Middleware**: Multer (file uploads), Morgan/Custom Logger
-* **Error Handling**: Custom ApplicationError class
+* **Database**: MongoDB (with repository pattern)
+* **Authentication & Security**: JWT, OTP via Nodemailer
+* **File Uploads**: Multer
+* **Error Handling**: Centralized ApplicationError class
+* **Logging**: Custom logger middleware
 
 ---
 
-## 📂 Project Structure
+## 🗂 Project Structure
+
+```mermaid
+graph TD
+A[Postaway-II] --> B[src]
+B --> C[modules]
+C --> D[auth]
+C --> E[user]
+C --> F[post]
+C --> G[comment]
+C --> H[like]
+C --> I[friendship]
+B --> J[middlewares]
+B --> K[utils]
+```
 
 ```
-Postaway/
+Postaway-II/
 │── src/
 │   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── auth.controller.js
+│   │   │   ├── auth.repository.js
+│   │   │   ├── auth.routes.js
+│   │   │   ├── auth.model.js
 │   │   ├── user/
-│   │   │   ├── user.model.js
 │   │   │   ├── user.controller.js
+│   │   │   ├── user.repository.js
 │   │   │   ├── user.routes.js
+│   │   │   ├── user.model.js
 │   │   ├── post/
-│   │   │   ├── post.model.js
 │   │   │   ├── post.controller.js
+│   │   │   ├── post.repository.js
 │   │   │   ├── post.routes.js
+│   │   │   ├── post.model.js
 │   │   ├── comment/
-│   │   │   ├── comment.model.js
 │   │   │   ├── comment.controller.js
+│   │   │   ├── comment.repository.js
 │   │   │   ├── comment.routes.js
+│   │   │   ├── comment.model.js
 │   │   ├── like/
-│   │   │   ├── like.model.js
 │   │   │   ├── like.controller.js
+│   │   │   ├── like.repository.js
 │   │   │   ├── like.routes.js
-│   │   ├── bookmark/
-│   │   │   ├── bookmark.model.js
-│   │   │   ├── bookmark.controller.js
-│   │   │   ├── bookmark.routes.js
+│   │   │   ├── like.model.js
+│   │   ├── friendship/
+│   │   │   ├── friendship.controller.js
+│   │   │   ├── friendship.repository.js
+│   │   │   ├── friendship.routes.js
 │   │
 │   ├── middlewares/
 │   │   ├── auth.middleware.js
@@ -84,48 +129,84 @@ Postaway/
 
 ---
 
+### ⚡ API Flow Diagram
+
+```mermaid
+sequenceDiagram
+participant Client
+participant Routes
+participant Controller
+participant Repository
+participant MongoDB
+
+Client->>Routes: Send request (e.g., POST /api/posts)
+Routes->>Controller: Call appropriate controller
+Controller->>Repository: Perform DB operations
+Repository->>MongoDB: Query / Update database
+MongoDB-->>Repository: Return data
+Repository-->>Controller: Return result
+Controller-->>Routes: Send response
+Routes-->>Client: Return response (JSON)
+```
+
+---
+
 ## ⚡ API Endpoints
 
-### User Routes (`/api/users`)
+### Authentication Routes (`/api/users`)
 
-* `POST /register` → Register a new user
-* `POST /login` → Login user & get JWT
-* `GET /` → Get all users
+* `POST /signup` → Register a new user
+* `POST /signin` → Login user
+* `POST /logout` → Logout current session
+* `POST /logout-all-devices` → Logout user from all devices
+
+### User Profile Routes (`/api/users`)
+
+* `GET /get-details/:userId` → Get user info (password excluded)
+* `GET /get-all-details` → Get all users info (passwords excluded)
+* `PUT /update-details/:userId` → Update user profile & avatar
 
 ### Post Routes (`/api/posts`)
 
-* `POST /` → Create a new post
-* `GET /` → Get all posts (with filter, sort & pagination)
-* `GET /:id` → Get post by ID
-* `PUT /:id` → Update post
-* `DELETE /:id` → Delete post
-* `PATCH /:id/draft/archive` → Save as draft or Archive post
+* `POST /` → Create a post
+* `GET /all` → Get all posts (news feed)
+* `GET /:postId` → Get a specific post
+* `GET /:` → Get all posts for a specific user
+* `PUT /:postId` → Update a post
+* `DELETE /:postId` → Delete a post
 
 ### Comment Routes (`/api/comments`)
 
-* `POST /:postid` → Add comment to post
-* `GET /:postid` → Get all comments on a post (with pagination)
-* `PUT /:commentId` → Update comment
-* `DELETE /:commentId` → Delete comment
+* `GET /:postId` → Get comments for a post
+* `POST /:postId` → Add comment to a post
+* `PUT /:commentId` → Update a comment
+* `DELETE /:commentId` → Delete a comment
 
 ### Like Routes (`/api/likes`)
 
-* `POST /:postid/toggle` → like post
-* `GET /:postid` → Get all likes on a post
-* `DELETE /:postid/toggle`→ unlike on a post
+* `GET /:id` → Get likes for a post/comment
+* `POST /toggle/:id` → Toggle like/unlike
 
-### Bookmark Routes (`/api/bookmarks`)
+### Friendship Routes (`/api/friends`)
 
-* `POST /:postid` → Bookmark a post
-* `GET /` → Get all bookmarked posts for user
-* `DELETE /:postid` → Remove bookmark
+* `GET /get-friends/:userId` → Get friends list
+* `GET /get-pending-requests` → Get pending friend requests
+* `POST /toggle-friendship/:friendId` → Send/cancel/unfriend
+* `POST /response-to-request/:friendId` → Accept/reject a request
+
+### OTP Routes (`/api/otp`)
+
+* `POST /send` → Send OTP for password reset
+* `POST /verify` → Verify OTP
+* `POST /reset-password` → Reset password after OTP verification
 
 ---
 
 ## 🔐 Authentication & Security
 
-* All routes except **User Registration & Login** are protected using **JWT authentication**.
-* Use the token in `Authorization: Bearer <token>` header for secured routes.
+* All routes except **signup & signin** are protected using **JWT**.
+* Access & refresh tokens stored in cookies for session management.
+* Password reset secured via **OTP verification**.
 
 ---
 
@@ -133,14 +214,18 @@ Postaway/
 
 ```bash
 # Clone repo
-git clone https://github.com/UjjwalShakeya/postaway-api.git
-cd postaway-api
+git clone https://github.com/UjjwalShakeya/postaway-api-mongo
+cd postaway-api-mongo
 
 # Install dependencies
 npm install
 
-# Create .env file
+# Create .env file with required configs
 JWT_SECRET=your_secret_key
+DB_URL=mongodb://localhost:27017/your_db_name
+DB_NAME=your_db_name  
+EMAIL_USER=your_email
+EMAIL_PASS=your_email_password
 
 # Run server
 node server.js
@@ -150,25 +235,25 @@ node server.js
 
 ## 🧪 Testing API
 
-Use **Postman / Thunder Client** to test routes.
-Example login response:
+* Use **Postman / Thunder Client** to test endpoints.
+* Example login response:
 
 ```json
 {
   "success": true,
   "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR..."
 }
 ```
 
 ---
 
-## 📖 Documentation
+## 📖 Documentation & Conventions
 
-* Each module (User, Post, Comment, Like, Bookmark) follows **MVC pattern**.
-* Error handling is centralized using `ApplicationError`.
-* Logger middleware tracks API requests.
-* Pagination & sorting supported in post & comment APIs.
+* **MVC & Repository Pattern**: Controller handles request/response, repository handles DB logic.
+* **Error Handling**: Centralized via `ApplicationError`.
+* **Pagination & Sorting**: Supported for posts & comments.
+* **Ownership Validation**: Only owners can modify/delete their posts/comments.
+* **Friendship Management**: Full CRUD support with pending request handling.
 
 ---
 

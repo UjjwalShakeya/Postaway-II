@@ -139,7 +139,7 @@ export default class CommentController {
         userId,
         comment,
       );
-      if (!updatedComment || updatedComment.deletedCount <= 0) {
+      if (!updatedComment || updatedComment.modifiedCount <= 0) {
         throw new ApplicationError(
           "Something went wrong updating comment",
           500
