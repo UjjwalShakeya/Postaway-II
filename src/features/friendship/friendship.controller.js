@@ -87,7 +87,7 @@ export default class FriendshipController {
       const friendId = req.params.friendId; // freindId
       const { action } = req.body; // accept || or reject
 
-      // Validate action
+        // Validate action
       if (!["accept", "reject"].includes(action?.toLowerCase())) {
         throw new ApplicationError(
           "Invalid action. Use: 'accept' or 'reject'",

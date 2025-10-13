@@ -84,3 +84,41 @@
 [2025-10-12T17:32:41.447Z] info: POST /api/likes/toggle/68ebd6638478495fe2dac37e Request Body Is Empty
 [2025-10-12T17:33:21.040Z] info: GET /api/likes/68deddbefb9edfae47b0c9c2 Request Body Is Empty
 [2025-10-12T17:33:32.856Z] info: GET /api/likes/68ebd6638478495fe2dac37e Request Body Is Empty
+[2025-10-12T17:45:05.712Z] info: POST /api/likes/toggle/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:46:00.719Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:46:56.867Z] info: GET /api/friends/get-pending-requests Request Body Is Empty
+[2025-10-12T17:47:17.405Z] info: GET /api/friends/get-pending-requests Request Body Is Empty
+[2025-10-12T17:47:42.956Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:49:01.944Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:49:18.971Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:49:52.829Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:50:09.529Z] info: GET /api/friends/get-pending-requests Request Body Is Empty
+[2025-10-12T17:51:04.447Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-12T17:57:40.194Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-12T17:58:09.034Z] info: GET /api/friends/get-pending-requests Request Body Is Empty
+[2025-10-12T17:58:35.176Z] info: POST /api/friends/response-to-request/68eaadea5a69a5f89b56dc0e {"action":"accept"}
+[2025-10-12T17:58:50.141Z] info: POST /api/friends/response-to-request/68eaadea5a69a5f89b56dc0e {"action":"reject"}
+[2025-10-12T17:59:25.358Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T17:59:53.962Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:01:12.760Z] info: GET /api/friends/get-friends/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:01:30.826Z] info: GET /api/friends/get-friends/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:05:15.326Z] info: GET /api/friends/get-friends/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:05:39.971Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:06:32.090Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:06:40.021Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:06:49.997Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:09:23.644Z] info: GET /api/friends/get-friends/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-12T18:10:20.813Z] info: GET /api/friends/get-friends/68eaadea5a69a5f89b56dc0e Request Body Is Empty
+[2025-10-12T18:10:43.249Z] info: GET /api/friends/get-friends/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:30:43.573Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:31:03.204Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:31:07.702Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:31:29.117Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:41:11.850Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:41:23.412Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:51:17.338Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:51:27.669Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:51:33.786Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}
+[2025-10-13T18:51:39.149Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:51:42.713Z] info: POST /api/friends/toggle-friendship/68ebe8c9ed324a7ff1534b14 Request Body Is Empty
+[2025-10-13T18:52:07.973Z] info: POST /api/friends/response-to-request/68ebe8c9ed324a7ff1534b14 {"action":"accept"}

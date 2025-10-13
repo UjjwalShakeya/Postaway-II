@@ -35,7 +35,7 @@ export default class FriendshipRepository {
           { friendId: userID }
         ]
       }).toArray();
-      
+
     } catch (err) {
       throw err;
     }
@@ -136,19 +136,16 @@ export default class FriendshipRepository {
     try {
       const userID = this.validateAndConvertId(userId, "User ID");
       const friendID = this.validateAndConvertId(friendId, "Friend ID");
-
+      
       // write you code down here
       const collection = await this.getCollection();
       const existingFriendship = await collection.findOne({
-        $or: [
-          { userId: userID, friendId: friendID },
-          { userId: friendID, friendId: userID },
-        ],
+        userId: friendID, friendId: userID, status: "pending"
       });
       if (!existingFriendship) return null;
 
       // Case 2: Accept → update status to accepted
-      if (existingFriendship.status === "pending" && action === "accept") {
+      if (action === "accept") {
         const result = await collection.findOneAndUpdate(
           { _id: existingFriendship._id },
           { $set: { status: "accepted", updatedAt: new Date() } },
@@ -161,7 +158,7 @@ export default class FriendshipRepository {
       }
 
       // Case 3: Reject → the friendship
-      if (existingFriendship.status === "pending" && action === "reject") {
+      if (action === "reject") {
         const result = await collection.findOneAndUpdate(
           { _id: existingFriendship._id },
           { $set: { status: "rejected", updatedAt: new Date() } },
