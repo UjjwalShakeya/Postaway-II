@@ -65,16 +65,71 @@ It enables users to post, comment, like, manage friendships, and securely reset 
 
 ```mermaid
 graph TD
-A[Postaway-II] --> B[src]
-B --> C[modules]
-C --> D[auth]
-C --> E[user]
-C --> F[post]
-C --> G[comment]
-C --> H[like]
-C --> I[friendship]
-B --> J[middlewares]
-B --> K[utils]
+A[Postaway-II] --> B[.vscode]
+A --> C[public]
+A --> D[services]
+D --> D1[email.service.js]
+
+A --> E[src]
+E --> E1[config]
+E1 --> E2[mongodb.js]
+
+A --> F[features]
+F --> F1[auth]
+F1 --> F1a[auth.controller.js]
+F1 --> F1b[auth.repository.js]
+F1 --> F1c[auth.routes.js]
+F1 --> F1d[auth.model.js]
+
+F --> F2[user]
+F2 --> F2a[user.controller.js]
+F2 --> F2b[user.repository.js]
+F2 --> F2c[user.routes.js]
+
+F --> F3[post]
+F3 --> F3a[post.controller.js]
+F3 --> F3b[post.repository.js]
+F3 --> F3c[post.routes.js]
+F3 --> F3d[post.model.js]
+
+F --> F4[comment]
+F4 --> F4a[comment.controller.js]
+F4 --> F4b[comment.repository.js]
+F4 --> F4c[comment.routes.js]
+F4 --> F4d[comment.model.js]
+
+F --> F5[like]
+F5 --> F5a[like.controller.js]
+F5 --> F5b[like.repository.js]
+F5 --> F5c[like.routes.js]
+F5 --> F5d[like.model.js]
+
+F --> F6[friendship]
+F6 --> F6a[friendship.controller.js]
+F6 --> F6b[friendship.repository.js]
+F6 --> F6c[friendship.routes.js]
+F6 --> F6d[friendship.model.js]
+
+A --> G[middlewares]
+G --> G1[errorHandler.middleware.js]
+G --> G2[fileUpload.middleware.js]
+G --> G3[jwt.middleware.js]
+G --> G4[logger.middleware.js]
+G --> G5[validator.middleware.js]
+
+A --> H[uploads]
+A --> I[utils]
+I --> I1[ApplicationError.js]
+I --> I2[cookies.js]
+
+A --> J[env.js]
+A --> K[.env]
+A --> L[.gitignore]
+A --> M[logs.txt]
+A --> N[package.json]
+A --> O[package-lock.json]
+A --> P[README.md]
+A --> Q[server.js]
 ```
 
 ```
