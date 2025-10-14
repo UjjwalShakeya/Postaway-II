@@ -223,8 +223,8 @@ Routes-->>Client: Return response (JSON)
 
 ```bash
 # Clone repo
-git clone https://github.com/UjjwalShakeya/postaway-api-mongo
-cd postaway-api-mongo
+git clone https://github.com/UjjwalShakeya/Postaway-II
+cd Postaway-II
 
 # Install dependencies
 npm install
