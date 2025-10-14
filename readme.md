@@ -74,8 +74,16 @@ C --> G[comment]
 C --> H[like]
 C --> I[friendship]
 B --> J[middlewares]
-B --> K[utils]
-B --> L[config]
+B --> K[config]
+
+A --> L[services]
+L --> L1[email.service.js]
+
+A --> M[uploads]
+
+A --> N[utils]
+N --> N1[ApplicationError.js]
+N --> N2[cookies.js]
 ```
 
 ```
