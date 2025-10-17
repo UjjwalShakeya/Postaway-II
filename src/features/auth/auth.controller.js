@@ -149,11 +149,11 @@ export default class AuthController {
     try {
       const userId = req.userID;
       if (!userId) throw new ApplicationError("User ID required", 400);
-
       await this.authRepository.removeAllRefreshToken(userId);
       await this.authRepository.incrementTokenVersion(userId);
 
       clearAuthCookies(res);
+
       res.status(200).json({ success: true, message: "Logged out from all devices" });
     } catch (err) {
       next(err);

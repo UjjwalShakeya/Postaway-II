@@ -89,51 +89,57 @@ N --> N2[cookies.js]
 ```
 Postaway-II/
 │── src/
-│   ├── modules/
+│   ├── features/
 │   │   ├── auth/
 │   │   │   ├── auth.controller.js
+│   │   │   ├── auth.model.js
 │   │   │   ├── auth.repository.js
 │   │   │   ├── auth.routes.js
-│   │   │   ├── auth.model.js
+│   │   ├── comment/
+│   │   │   ├── comment.controller.js
+│   │   │   ├── comment.model.js
+│   │   │   ├── comment.repository.js
+│   │   │   ├── comment.routes.js
+│   │   ├── friendship/
+│   │   │   ├── friendship.controller.js
+│   │   │   ├── friendship.model.js
+│   │   │   ├── friendship.repository.js
+│   │   │   ├── friendship.routes.js
+│   │   ├── like/
+│   │   │   ├── like.controller.js
+│   │   │   ├── like.model.js
+│   │   │   ├── like.repository.js
+│   │   │   ├── like.routes.js
+│   │   ├── post/
+│   │   │   ├── post.controller.js
+│   │   │   ├── post.model.js
+│   │   │   ├── post.repository.js
+│   │   │   ├── post.routes.js
 │   │   ├── user/
 │   │   │   ├── user.controller.js
 │   │   │   ├── user.repository.js
 │   │   │   ├── user.routes.js
-│   │   │   ├── user.model.js
-│   │   ├── post/
-│   │   │   ├── post.controller.js
-│   │   │   ├── post.repository.js
-│   │   │   ├── post.routes.js
-│   │   │   ├── post.model.js
-│   │   ├── comment/
-│   │   │   ├── comment.controller.js
-│   │   │   ├── comment.repository.js
-│   │   │   ├── comment.routes.js
-│   │   │   ├── comment.model.js
-│   │   ├── like/
-│   │   │   ├── like.controller.js
-│   │   │   ├── like.repository.js
-│   │   │   ├── like.routes.js
-│   │   │   ├── like.model.js
-│   │   ├── friendship/
-│   │   │   ├── friendship.controller.js
-│   │   │   ├── friendship.repository.js
-│   │   │   ├── friendship.routes.js
 │   │
 │   ├── middlewares/
-│   │   ├── auth.middleware.js
-│   │   ├── error.middleware.js
-│   │   ├── upload.middleware.js
-│   │   └── logger.middleware.js
+│   │   ├── errorHandler.middleware.js
+│   │   ├── fileUpload.middleware.js
+│   │   ├── jwt.middleware.js
+│   │   ├── logger.middleware.js
+│   │   └── validator.middleware.js
+│   │
+│   ├── uploads/
 │   │
 │   ├── utils/
-│   │   └── ApplicationError.js
+│   │   ├── ApplicationError.js
+│   │   └── cookies.js
 │   │
-├── server.js
-├── .env
 ├── .gitignore
+├── .env
+├── log.txt
+├── package-lock.json
 ├── package.json
-└── README.md
+├── readme.md 
+└──server.js
 ```
 
 ---
@@ -168,6 +174,10 @@ Routes-->>Client: Return response (JSON)
 * `POST /signin` → Login user
 * `POST /logout` → Logout current session
 * `POST /logout-all-devices` → Logout user from all devices
+* `POST /send` → Send OTP for password reset
+* `POST /verify` → Verify OTP
+* `POST /reset-password` → Reset password after OTP verification
+* `POST /refresh-token` → Generate a new access token using a valid refresh token
 
 ### User Profile Routes (`/api/users`)
 
@@ -202,12 +212,6 @@ Routes-->>Client: Return response (JSON)
 * `GET /get-pending-requests` → Get pending friend requests
 * `POST /toggle-friendship/:friendId` → Send/cancel/unfriend
 * `POST /response-to-request/:friendId` → Accept/reject a request
-
-### OTP Routes (`/api/otp`)
-
-* `POST /send` → Send OTP for password reset
-* `POST /verify` → Verify OTP
-* `POST /reset-password` → Reset password after OTP verification
 
 ---
 
